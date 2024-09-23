@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <cmath>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -7,8 +6,8 @@ using namespace std;
 
 const int N = 200;
 const int n = 47205;
+const int T = 74;
 int mnm = 1000;
-int update_times[5000] = {0};
 ofstream data_out;
 
 bool sign(double a){
@@ -32,8 +31,8 @@ public:
       if(data_string[i] == ' ') indexes.push_back(i);
     }
     indexes.push_back(data_string.length());
+    x.push_back((make_pair(0, 1)));
 
-    x.push_back(make_pair(0, 1));
     for(int i = 0; i < indexes.size() - 1; i++){
       string data_substr = data_string.substr(indexes[i], indexes[i + 1]);
       int pos;
@@ -104,6 +103,7 @@ weight_vector train(int seed){
   weight_vector weight;
   int count = 0;
   int update_count = 0;
+  data_out << 0 << ' ';
 
   srand(seed);
 
@@ -114,20 +114,23 @@ weight_vector train(int seed){
 
     if(!if_update){
       count++;
+      continue;
     }
     else{
       count = 0;
       update_count++;
     }
 
-    if(update_count > 74) continue;
+    if(update_count > T) continue;
     double length = 0;
     for(double d : weight.w) length += d * d;
     length = sqrt(length);
     data_out << length << ' ';
-    if(update_count == 74) data_out << '\n';
+    if(update_count == T) data_out << '\n';
   }
 
+  cout << update_count << '\n';
+  mnm = min(update_count, mnm);
   return weight;
 }
 
