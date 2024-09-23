@@ -10,7 +10,6 @@ const int N = 200;
 const int n = 47205;
 int mnm = 1000;
 int update_times[5000] = {0};
-ofstream P9_data_out;
 
 bool sign(double a){
   if(a <= 0) return false;
@@ -61,7 +60,7 @@ public:
     w.assign(n + 1, 0);
   }
 
-  bool update(data_vector example){
+  int update(data_vector example){
     double inner_product = 0;
     for(pair<int, double> p : example.x){
       if(w[p.first] == 0) continue;
@@ -69,20 +68,35 @@ public:
     }
     // cout << "inner product: " << inner_product << '\n';
 
-    if(sign(inner_product) == example.y) return false;
+    if(sign(inner_product) == example.y) return 0;
+    double length = 0;
+    for(pair<int, double> p : example.x) length += p.second * p.second;
+    int count = 0;
+    if(example.y){
+      while(sign(inner_product) != example.y){
+        count++;
+        inner_product += length;
+      }
+    }
+    else{
+      while(sign(inner_product) != example.y){
+        count++;
+        inner_product -= length;
+      }
+    }
 
     if(example.y){
       for(pair<int, double> p : example.x){
-        w[p.first] += p.second;
+        w[p.first] += count * p.second;
       }
     }
     else{
       for(pair<int, double> p : example.x){
-        w[p.first] -= p.second;
+        w[p.first] -= count * p.second;
       }
     }
 
-    return true;
+    return count;
   }
 };
 
@@ -110,14 +124,14 @@ weight_vector train(int seed){
   while(count < 1000){
     double random = double(rand()) / double(RAND_MAX);
     int index = 199 * random + 1;
-    bool if_update = weight.update(example_set[index]);
+    int update_times = weight.update(example_set[index]);
 
-    if(!if_update){
+    if(update_times == 0){
       count++;
     }
     else{
       count = 0;
-      update_count++;
+      update_count += update_times;
     }
   }
 
@@ -126,7 +140,6 @@ weight_vector train(int seed){
     return weight;
   }
   update_times[update_count]++;
-  P9_data_out << update_count << ' ';
   cout << update_count << '\n';
   mnm = min(update_count, mnm);
   return weight;
@@ -135,12 +148,10 @@ weight_vector train(int seed){
 
 int main(){
   init_example_set();
-  P9_data_out.open("./P9_data.txt");
   for(int i = 1; i <= 1000; i++){
     cout << i << ' ';
     train(i);
   }
-  P9_data_out.close();
   cout << mnm;
   return 0;
 }

@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <cmath>
-#include <ctime>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -10,7 +9,7 @@ const int N = 200;
 const int n = 47205;
 int mnm = 1000;
 int update_times[5000] = {0};
-ofstream P9_data_out;
+ofstream P10_data_out;
 
 bool sign(double a){
   if(a <= 0) return false;
@@ -119,28 +118,27 @@ weight_vector train(int seed){
       count = 0;
       update_count++;
     }
+
+    if(update_count > 41) continue;
+    double length = 0;
+    for(double d : weight.w) length += d * d;
+    length = sqrt(length);
+    P10_data_out << length << ' ';
+    if(update_count == 41) P10_data_out << '\n';
   }
 
-  if(update_count >= 5000){
-    cout << "uh-oh out of bounds";
-    return weight;
-  }
-  update_times[update_count]++;
-  P9_data_out << update_count << ' ';
-  cout << update_count << '\n';
-  mnm = min(update_count, mnm);
   return weight;
 }
 
 
 int main(){
   init_example_set();
-  P9_data_out.open("./P9_data.txt");
+  P10_data_out.open("./P10_data.txt");
   for(int i = 1; i <= 1000; i++){
     cout << i << ' ';
     train(i);
   }
-  P9_data_out.close();
+  P10_data_out.close();
   cout << mnm;
   return 0;
 }
