@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <cmath>
 #include <ctime>
 #include <fstream>
 #include <vector>
@@ -8,9 +7,9 @@ using namespace std;
 
 const int N = 200;
 const int n = 47205;
+ofstream data_out;
 int mnm = 1000;
 int update_times[5000] = {0};
-ofstream P9_data_out;
 
 bool sign(double a){
   if(a <= 0) return false;
@@ -34,6 +33,7 @@ public:
     }
     indexes.push_back(data_string.length());
 
+    x.push_back(make_pair(0, 1));
     for(int i = 0; i < indexes.size() - 1; i++){
       string data_substr = data_string.substr(indexes[i], indexes[i + 1]);
       int pos;
@@ -61,7 +61,7 @@ public:
     w.assign(n + 1, 0);
   }
 
-  bool update(data_vector example){
+  int update(data_vector example){
     double inner_product = 0;
     for(pair<int, double> p : example.x){
       if(w[p.first] == 0) continue;
@@ -69,20 +69,35 @@ public:
     }
     // cout << "inner product: " << inner_product << '\n';
 
-    if(sign(inner_product) == example.y) return false;
+    if(sign(inner_product) == example.y) return 0;
+    double length = 0;
+    for(pair<int, double> p : example.x) length += p.second * p.second;
+    int count = 0;
+    if(example.y){
+      while(sign(inner_product) != example.y){
+        count++;
+        inner_product += length;
+      }
+    }
+    else{
+      while(sign(inner_product) != example.y){
+        count++;
+        inner_product -= length;
+      }
+    }
 
     if(example.y){
       for(pair<int, double> p : example.x){
-        w[p.first] += p.second;
+        w[p.first] += count * p.second;
       }
     }
     else{
       for(pair<int, double> p : example.x){
-        w[p.first] -= p.second;
+        w[p.first] -= count * p.second;
       }
     }
 
-    return true;
+    return count;
   }
 };
 
@@ -110,24 +125,19 @@ weight_vector train(int seed){
   while(count < 1000){
     double random = double(rand()) / double(RAND_MAX);
     int index = 199 * random + 1;
-    bool if_update = weight.update(example_set[index]);
+    int update_times = weight.update(example_set[index]);
 
-    if(!if_update){
+    if(update_times == 0){
       count++;
     }
     else{
       count = 0;
-      update_count++;
+      update_count += update_times;
     }
   }
 
-  if(update_count >= 5000){
-    cout << "uh-oh out of bounds";
-    return weight;
-  }
-  update_times[update_count]++;
-  P9_data_out << update_count << ' ';
   cout << update_count << '\n';
+  data_out << update_count << ' ';
   mnm = min(update_count, mnm);
   return weight;
 }
@@ -135,12 +145,12 @@ weight_vector train(int seed){
 
 int main(){
   init_example_set();
-  P9_data_out.open("./P9_data.txt");
+  data_out.open("./P12_data.txt");
   for(int i = 1; i <= 1000; i++){
     cout << i << ' ';
     train(i);
   }
-  P9_data_out.close();
+  data_out.close();
   cout << mnm;
   return 0;
 }

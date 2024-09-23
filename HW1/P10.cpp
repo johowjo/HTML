@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <cmath>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -8,8 +7,7 @@ using namespace std;
 const int N = 200;
 const int n = 47205;
 int mnm = 1000;
-int update_times[5000] = {0};
-ofstream P10_data_out;
+ofstream data_out;
 
 bool sign(double a){
   if(a <= 0) return false;
@@ -32,6 +30,7 @@ public:
       if(data_string[i] == ' ') indexes.push_back(i);
     }
     indexes.push_back(data_string.length());
+    x.push_back((make_pair(0, 1)));
 
     for(int i = 0; i < indexes.size() - 1; i++){
       string data_substr = data_string.substr(indexes[i], indexes[i + 1]);
@@ -118,27 +117,27 @@ weight_vector train(int seed){
       count = 0;
       update_count++;
     }
-
-    if(update_count > 41) continue;
-    double length = 0;
-    for(double d : weight.w) length += d * d;
-    length = sqrt(length);
-    P10_data_out << length << ' ';
-    if(update_count == 41) P10_data_out << '\n';
   }
 
+  if(update_count >= 5000){
+    cout << "uh-oh out of bounds";
+    return weight;
+  }
+  data_out << update_count << ' ';
+  cout << update_count << '\n';
+  mnm = min(update_count, mnm);
   return weight;
 }
 
 
 int main(){
   init_example_set();
-  P10_data_out.open("./P10_data.txt");
+  data_out.open("./P10_data.txt");
   for(int i = 1; i <= 1000; i++){
     cout << i << ' ';
     train(i);
   }
-  P10_data_out.close();
+  data_out.close();
   cout << mnm;
   return 0;
 }
