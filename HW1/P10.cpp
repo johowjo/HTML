@@ -119,10 +119,6 @@ weight_vector train(int seed){
     }
   }
 
-  if(update_count >= 5000){
-    cout << "uh-oh out of bounds";
-    return weight;
-  }
   data_out << update_count << ' ';
   cout << update_count << '\n';
   mnm = min(update_count, mnm);

@@ -8,7 +8,6 @@ using namespace std;
 const int N = 200;
 const int n = 47205;
 ofstream data_out;
-int mnm = 1000;
 int update_times[5000] = {0};
 
 bool sign(double a){
@@ -61,7 +60,7 @@ public:
     w.assign(n + 1, 0);
   }
 
-  int update(data_vector example){
+  int update1(data_vector example){
     double inner_product = 0;
     for(pair<int, double> p : example.x){
       if(w[p.first] == 0) continue;
@@ -99,6 +98,30 @@ public:
 
     return count;
   }
+
+  bool update2(data_vector example){
+    double inner_product = 0;
+    for(pair<int, double> p : example.x){
+      if(w[p.first] == 0) continue;
+      inner_product += w[p.first] * p.second;
+    }
+    // cout << "inner product: " << inner_product << '\n';
+
+    if(sign(inner_product) == example.y) return false;
+
+    if(example.y){
+      for(pair<int, double> p : example.x){
+        w[p.first] += p.second;
+      }
+    }
+    else{
+      for(pair<int, double> p : example.x){
+        w[p.first] -= p.second;
+      }
+    }
+
+    return true;
+  }
 };
 
 data_vector example_set[N + 1];
@@ -115,43 +138,67 @@ void init_example_set(){
   data_in.close();
 }
 
-weight_vector train(int seed){
-  weight_vector weight;
-  int count = 0;
-  int update_count = 0;
+void train(int seed, vector<int> &v1, vector<int> &v2){
+  weight_vector w1;
+  weight_vector w2;
+  int count1 = 0;
+  int count2 = 0;
+  int update_count1 = 0;
+  int update_count2 = 0;
 
   srand(seed);
 
-  while(count < 1000){
+  while(count1 < 1000){
     double random = double(rand()) / double(RAND_MAX);
     int index = 199 * random + 1;
-    int update_times = weight.update(example_set[index]);
+    bool if_update = w1.update1(example_set[index]);
 
-    if(update_times == 0){
-      count++;
+    if(!if_update){
+      count1++;
     }
     else{
-      count = 0;
-      update_count += update_times;
+      count1 = 0;
+      update_count1++;
     }
   }
 
-  cout << update_count << '\n';
-  data_out << update_count << ' ';
-  mnm = min(update_count, mnm);
-  return weight;
+  while(count2 < 1000){
+    double random = double(rand()) / double(RAND_MAX);
+    int index = 199 * random + 1;
+    int update_times = w2.update1(example_set[index]);
+
+    if(update_times == 0){
+      count2++;
+    }
+    else{
+      count2 = 0;
+      update_count2 += update_times;
+    }
+  }
+
+  v1.push_back(update_count1);
+  v2.push_back(update_count2);
 }
 
 
 int main(){
   init_example_set();
   data_out.open("./P12_data.txt");
-  for(int i = 1; i <= 1000; i++){
-    cout << i << ' ';
-    train(i);
+  for(int i = 0; i < 100; i++){
+    vector<int> v1;
+    vector<int> v2;
+    for(int j = 0; j < 1000; j++){
+      train(1000 * i + j, v1, v2);
+    }
+    sort(v1.begin(), v1.end());
+    sort(v2.begin(), v2.end());
+    int m1 = (v1[499] + v1[500]) / 2;
+    int m2 = (v2[499] + v2[500]) / 2;
+
+    cout << m1 << ' ' << m2 << '\n';
+    data_out << m1 << ' ' << m2 << '\n';
   }
   data_out.close();
-  cout << mnm;
   return 0;
 }
 
