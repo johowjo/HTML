@@ -22,6 +22,9 @@
 \usepackage[retainorgcmds]{IEEEtrantools}
 \usepackage[margin=3cm]{geometry}
 \usepackage{amsmath}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\let\mathbb\relax
+\DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}
 \newlength{\tabcont}
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.05in}
@@ -39,6 +42,7 @@
 \graphicspath{{./}}
 \theoremstyle{definition}
 \newtheorem{thr}{Theorem}
+\newtheorem{lma}{Lemma}
 \newtheorem{defn}{Definition}
 \newtheorem{reg}{Rule}
 \newtheorem{exer}{Exercise}
@@ -172,8 +176,83 @@ We see from the scatter plot that in contrast to P11, the number of errors range
 Also, we see that the median of $E_{out} - E_{in}$ in P12 is significantly smaller than that in P11. Observe that for hypotheses with a higher number of errors, $E_{in}$ is higher than $E_{out}$ (as can be seen in the case where 12 errors are made and $E_{in}$ is 1 while $E_{out}$ is less than 1), and for hypotheses with a lower number of errors, $E_{in}$ is lower than $E_{in}$ (as can be seen in the case where 0 error is made and $E_{in}$ is 0 while $E_{out}$ is greater than 0). This explains why in P11, where hypotheses with lower $E_{in}$ are chosen, the median of $E_{in} - E_{out}$ is greater than that in P12, where hypotheses are randomly (and uniformly) chosen.  \\
 Code Snapshot: \\ 
 \includegraphics[width =\textwidth]{P12code.png}
-% \newpage
-% \section*{13}
+\newpage
+\section*{13}
+Consider the multi-dimensional positive ray as follows. For data sets that contain $\vb{x} \in \mathbb{R}^d$, we can apply positive ray to one dimension: 
+\[
+  h^\prime_{i, \theta} = \text{sign}(x_i - \theta)
+\]
+Let $\mathcal{H}^\prime$ be the hypotheses set that contains all such functions in $\mathbb{R}^d$. \\ 
+We represent a dichotomy as $\mathcal{D}_1$, $\mathcal{D}_2$, where $\mathcal{D}_1$ contains all the vectors that are classified as $-1$ and $\mathcal{D}_2$ contains all the vectors that are classified as $+1$.
+Consider a dichotomy $\mathcal{D}_1$, $\mathcal{D}_2$ of $n$ data vectors labeled as $\{\vb{x}_1,\dots,\vb{x}_n\}$. This dichotomy can be achieved by $\mathcal{H}^\prime$ if there exist some dimension $i$ such that 
+\[
+  {v_1}_{i} < {v_2}_{i} \quad \forall \vb{v}_1\in \mathcal{D}_1, \vb{v}_2\in \mathcal{D}_2
+\]
+Consider the order of the component of the $n$ vectors on dimension $i$, assume that no two vectors have the same component (this is a reasonable assumption to make, as we're trying to separate the data vectors, it's optimal to have vectors that all have different components), this order corresponds to a permutation of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$. We denote this permutation as $\mathcal{P}$.
+From the condition above, we know that the positive ray functions of this dimension $h^\prime_{i, \theta}$ can achieve a dichotomy $\mathcal{D}_1$, $\mathcal{D}_2$ iff for some integer $0 \leq k \leq n$, $\mathcal{D}_1$ is the set of the first $k$ vectors in $\mathcal{P}$. We say that this dichotomy is "dealt with" by the permutation $\mathcal{P}$ if this criteria is met.
+Therefore, $\mathcal{H}^\prime$ can scatter $n$ data vectors in $\mathbb{R}^d$ iff there exist $d$ permutations of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$ and a set of $n$ data vectors such that every dichotomy produced by the data vectors can be dealt with by at least one of the permutations. \\
+\bigbreak
+Next we consider the following graph.\\
+\includegraphics[width = \textwidth]{IMG_101A1D00FD8F-1.jpeg}\\
+The graph consists of $n + 1$ layers of nodes, two nodes can only be connected if the difference of their depth is $1$. \\ 
+We let each node of depth $k$ represent a subset $k$ of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$, and two nodes at adjacent depths are connected if one is a subset of another(i.e. you can make the two sets equal by removing one element from the set with larger size). \\ 
+% The graph represents many important information in this problem. \\ 
+ We can see that at depth $k$ there are ${n\choose k}$ nodes, and one simple path from the top node to the bottom node represents one unique permutation of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$. \\ 
+ By the discussion above, we can also see that we can create a one-to-one relation between a node in the graph to a dichotomy of the $n$ vectors by linking the node with the dichotomy in which all the vectors in the subset represented by the node is classified as $-1$. This way, the nodes in a simple path from top to bottom represents the collection of dichotomies the permutation presented by this simple path can "dealt with". \\
+ Hence the scattering problem becomes whether we can find $d$ different simple paths from the top node to the bottom node such that all node is visited at least once by a path. \\
+ \medbreak
+ We then prove that for scatter to happen, we must have $d \geq {n\choose \lfloor\frac{n}{2}\rfloor}$. \\
+ Proof: \\
+ We notice that the depth at which there are the most nodes is $k = \lfloor\frac{n}{2}\rfloor$, with ${n\choose \lfloor\frac{n}{2}\rfloor}$ nodes. If $d < {n\choose \lfloor\frac{n}{2}\rfloor}$ clearly there must be unvisited node(s) at depth $\lfloor\frac{n}{2}\rfloor$, so scattering is not possible. \\ 
+ % \begin{lma}
+ %   Consider the two layers of the graph of depth $k$ and $k + 1$ respectively. Let $n_k$ and $n_{k + 1}$ be the number of nodes at the two layers. WLOG, assume that$n_k \geq n_{k + 1}$. Then there exists a set of $n_k$ edges between nodes of the two layers such that every node at depth $k$ connects with exactly one edge, and every node at depth $k + 1$ connects with at least one edge. \\ 
+ %   Proof: \\ 
+ %   We know that for each node at depth $k$, it is connected with $n - k$ edges that go downwards to depth $k + 1$. For each node at depth $k + 1$, it is connected with $k + 1$ edges that go upwards to depth $k$. \\
+ %   % Suppose that we have successfully connected the first $m$ nodes at depth $k + 1$ with $m$ different nodes at depth $k$.
+ %   Notice that we can always link the $n_{k + 1}$ nodes at depth $k + 1$ to $n_{k + 1}$ different nodes at depth $k$. This is because 
+ %
+ % \end{lma}
+ % Next, starting from the ${n\choose \lfloor\frac{n}{2}\rfloor}$ nodes at depth $k$, we prove that there exist $d$ simple paths starting from depth $k$ ending at depth $n$ that visits all the nodes of depth no smaller than $k$ at least once. Consider depth $k + 1$. Since the nodes at this depth is less than or equal to the number of nodes at depth $k$, by symmetric arguments we can see that we can also visit all the nodes at depth $k + 1$ (the symmetry here is that the number of edges that starts from a node at depth $k$ and ends at a node at depth $k + 1$ is the same for all nodes at depth $k$, and is also same for all nodes at depth $k + 1$, this symmetry means that the paths starting at depth $k$ can visit the nodes at $k + 1$ equally, and since there are no less paths than nodes, every node is visited). By induction, we can further prove that all nodes below depth $k$ can be visited. Similarly, starting at depth $k$, all nodes above depth $k$ can also be visited. Since the graph is not directed, we can combine a path that starts from some node at depth $k$ and ends at the bottom node and another path that starts from the same node at depth $k$ and ends at the top node into a path from the top node to the bottom node. \\ 
+ % We have thereby proven that $d = {n\choose \lfloor\frac{n}{2}\rfloor}$ is the smallest possible dimension to scatter a data set of vectors of size $n$. \\ 
+ Hence the VC dimension of $\mathcal{H}^\prime$ is upper-bounded by
+ \[
+   d^\prime_{VC} \leq \tilde{d}
+  % {n\choose \lfloor\frac{n}{2}\rfloor} \leq d
+ \]
+ Where $\tilde{d}$ is the largest integer such that
+ \[
+   {\tilde{d}\choose \lfloor\frac{\tilde{d}}{2}\rfloor} \leq d
+ \]
+ \medbreak
+ For the last part of this problem, we prove that the VC dimension of $\mathcal{H}^\prime$ and the VC dimension of $\mathcal{H}^\prime$ is related by $d_{VC}^\prime + 1= d_{VC}$ \\ 
+ \medbreak
+ First we prove that $d^\prime_{VC} + 1 \leq d_{VC}$ \\ 
+ Suppose that $\mathcal{H}^\prime$ can scatter $n$ data vectors $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$, that is, it can produce all $2^n$ dichotomies. Now consider using the decision stump model instead of the positive ray model. (That is, for every $h^\prime_{i, \theta}$ positive ray function that is previously used, we now use $h_{-1, i, \theta}$ and $h_{+1, i, \theta}$ to classify the set of vectors) In this case all the dichotomies are produced twice. We now insert a new data vector $\vb{v}^\prime$ to the set of $n$ vectors. We choose $\vb{v}^\prime$ such that
+ \[
+   \vb{v}^\prime_i > \vb{v}_i\quad \forall \vb{v}\in \{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}, \quad i \in \{1, 2,\dots,d\}
+ \]
+ And
+ \[
+   \vb{v}^\prime_i > \theta \quad \forall \theta \in \mathcal{T}_i
+ \]
+ Where $\mathcal{T}_i$ is the set containing all the $\theta$ factors used for the positive ray model on dimension $i$ to produce the dichotomies. \\ 
+ This way, if $h_{+1, i, \theta}$ and $h_{-1, i, \theta}$ produce the same dichotomy for $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$, they produce two different dichotomies for $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n, \vb{v}^\prime\}$ \\ 
+ Therefore, we see that if $\mathcal{H}^\prime$ can scatter $n$ data vectors, $\mathcal{H}$ can scatter $n + 1$ data vectors. \\ 
+ \medbreak
+ Next we prove that $d^\prime_{VC} + 1 \geq d_{VC}$ \\ 
+ Suppose that $\mathcal{H}$ can scatter $n + 1$ data vectors $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n, \vb{v}^\prime\}$. We first adjust the order of these $n + 1$ vectors on each dimension such that $\vb{v}^\prime$ is always classified as $+1$ by a hypothesis $h$ with $s = +1$. (If $\vb{v}^\prime$ is classified as $-1$ on some dimension, we just reverse the order of all the vectors' components of that dimension, then by symmetry between $h_{-1, i, \theta}$ and $_{+1, i, \theta}$, we see that set of vectors is stilled scattered by the same set of decision stump functions.) Now consider using the positive ray model instead of the decision stump model. (That is, for every pair of $h_{-1, i, \theta}$ and $h_{+1, i, \theta}$, that is previously used, we now use $h^\prime_{i, \theta}$ to classify the vectors) We see that of the $2^{n + 1}$ dichotomies we previously had, only the ones where $\vb{v}^\prime$ is classified as $+1$ is left. Now we remove $\vb{v}^\prime$ from the set of vectors, and we are left with the $2^n$ dichotomies of the $n$ vectors in $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$. Hence we've proven that if $\mathcal{H}$ can scatter $n + 1$ data vectors, $\mathcal{H}^\prime$ can scatter $n$ data vectors. \\ 
+ Therefore $d^\prime_{VC} + 1 \geq d_{VC}$
+ We now have $d^\prime_{VC} + 1 = d_{VC}$ \\
+ Hence the VC dimension of $\mathcal{H}^\prime$ 
+ \[
+   d_{VC} = \tilde{d} + 1
+ \]
+ Where $\tilde{d}$ is the largest integer such that 
+ \[
+   {\tilde{d}\choose \lfloor\frac{\tilde{d}}{2}\rfloor} \leq d
+ \]
+ \bigbreak
+ On a further note, by the argument of the graph and simple paths made above, we can see that if we have $d \geq {n\choose \lfloor\frac{n}{2}\rfloor}$ we can have $d$ simple paths from the top node to the bottom node that visit every node at least once. Therefore, the $\tilde{d} + 1$ we obtained above is also a lower bound for $d_{VC}$, and $\tilde{d} + 1$ not only bounds, but is also the precise value of $d_{VC}$
 % \textbf{This problem is done in collaboration with B12901035 鄭宇彥}
 % Let $\mathcal{H}_{i^\prime}$ be the subset of $\mathcal{H}$ that contains all hypotheses $h_{s, i, \theta}$ of one specific dimension $i = i^\prime$. Clearly this set of hypotheses can only produce $2n$ dichotomies, as the 1D case of this problem is simply the positive ray. Therefore, with $2^n$ dichotomies and $d$ dimensions in total we achieve a bound for $n$ such that the data vectors can be scattered.
 % \[
@@ -181,7 +260,7 @@ Code Snapshot: \\
 % \]
 % We then apply this bound to $d_{VC}$ \\ 
 % \begin{align*}
-%   2d_{VC}d \geq 2^{d_{VC}} \\ 
+%   2d_{VC}d \geq 2^{d_{}} \\ 
 %   \implies d_{VC} &\leq \lg(2d_{VC}d) = 1 + \lg{d} + \lg{d_{VC}}  \\
 %   &\leq 1 + \lg{d} + \lg(1 + \lg{d} + \lg{d_{VC}})
 % \end{align*}
