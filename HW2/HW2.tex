@@ -183,15 +183,16 @@ Consider the multi-dimensional positive ray as follows. For data sets that conta
   h^\prime_{i, \theta} = \text{sign}(x_i - \theta)
 \]
 Let $\mathcal{H}^\prime$ be the hypotheses set that contains all such functions in $\mathbb{R}^d$. \\ 
-We represent a dichotomy as $\mathcal{D}_1$, $\mathcal{D}_2$, where $\mathcal{D}_1$ contains all the vectors that are classified as $-1$ and $\mathcal{D}_2$ contains all the vectors that are classified as $+1$.
+We represent a dichotomy by $\mathcal{D}_1$, $\mathcal{D}_2$, where $\mathcal{D}_1$ contains all the vectors that are classified as $-1$ and $\mathcal{D}_2$ contains all the vectors that are classified as $+1$.
 Consider a dichotomy $\mathcal{D}_1$, $\mathcal{D}_2$ of $n$ data vectors labeled as $\{\vb{x}_1,\dots,\vb{x}_n\}$. This dichotomy can be achieved by $\mathcal{H}^\prime$ if there exist some dimension $i$ such that 
 \[
   {v_1}_{i} < {v_2}_{i} \quad \forall \vb{v}_1\in \mathcal{D}_1, \vb{v}_2\in \mathcal{D}_2
 \]
 Consider the order of the component of the $n$ vectors on dimension $i$, assume that no two vectors have the same component (this is a reasonable assumption to make, as we're trying to separate the data vectors, it's optimal to have vectors that all have different components), this order corresponds to a permutation of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$. We denote this permutation as $\mathcal{P}$.
-From the condition above, we know that the positive ray functions of this dimension $h^\prime_{i, \theta}$ can achieve a dichotomy $\mathcal{D}_1$, $\mathcal{D}_2$ iff for some integer $0 \leq k \leq n$, $\mathcal{D}_1$ is the set of the first $k$ vectors in $\mathcal{P}$. We say that this dichotomy is "dealt with" by the permutation $\mathcal{P}$ if this criteria is met.
-Therefore, $\mathcal{H}^\prime$ can scatter $n$ data vectors in $\mathbb{R}^d$ iff there exist $d$ permutations of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$ and a set of $n$ data vectors such that every dichotomy produced by the data vectors can be dealt with by at least one of the permutations. \\
-\bigbreak
+From the condition above, we know that the positive ray functions of this dimension $h^\prime_{i, \theta}$ can achieve a dichotomy $\mathcal{D}_1$, $\mathcal{D}_2$ iff for some integer $0 \leq k \leq n$, $\mathcal{D}_1$ is the set that consists of the first $k$ vectors in $\mathcal{P}$. We say that this dichotomy is "dealt with" by the permutation $\mathcal{P}$ if this criteria is met.
+Therefore, $\mathcal{H}^\prime$ can scatter $n$ data vectors in $\mathbb{R}^d$ iff there exist $d$ permutations of $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$ and a set of $n$ data vectors such that every dichotomy produced by the data vectors can be "dealt with" by at least one of the permutations. \\
+(Continued on the next page)\\
+\newpage
 Next we consider the following graph.\\
 \includegraphics[width = \textwidth]{IMG_101A1D00FD8F-1.jpeg}\\
 The graph consists of $n + 1$ layers of nodes, two nodes can only be connected if the difference of their depth is $1$. \\ 
@@ -238,14 +239,16 @@ We let each node of depth $k$ represent a subset $k$ of $\{\vb{v}_1, \vb{v}_2,\d
  Where $\mathcal{T}_i$ is the set containing all the $\theta$ factors used for the positive ray model on dimension $i$ to produce the dichotomies. \\ 
  This way, if $h_{+1, i, \theta}$ and $h_{-1, i, \theta}$ produce the same dichotomy for $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$, they produce two different dichotomies for $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n, \vb{v}^\prime\}$ \\ 
  Therefore, we see that if $\mathcal{H}^\prime$ can scatter $n$ data vectors, $\mathcal{H}$ can scatter $n + 1$ data vectors. \\ 
+ So $d^\prime_{VC} + 1 \leq d_{VC}$.
  \medbreak
  Next we prove that $d^\prime_{VC} + 1 \geq d_{VC}$ \\ 
  Suppose that $\mathcal{H}$ can scatter $n + 1$ data vectors $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n, \vb{v}^\prime\}$. We first adjust the order of these $n + 1$ vectors on each dimension such that $\vb{v}^\prime$ is always classified as $+1$ by a hypothesis $h$ with $s = +1$. (If $\vb{v}^\prime$ is classified as $-1$ on some dimension, we just reverse the order of all the vectors' components of that dimension, then by symmetry between $h_{-1, i, \theta}$ and $_{+1, i, \theta}$, we see that set of vectors is stilled scattered by the same set of decision stump functions.) Now consider using the positive ray model instead of the decision stump model. (That is, for every pair of $h_{-1, i, \theta}$ and $h_{+1, i, \theta}$, that is previously used, we now use $h^\prime_{i, \theta}$ to classify the vectors) We see that of the $2^{n + 1}$ dichotomies we previously had, only the ones where $\vb{v}^\prime$ is classified as $+1$ is left. Now we remove $\vb{v}^\prime$ from the set of vectors, and we are left with the $2^n$ dichotomies of the $n$ vectors in $\{\vb{v}_1, \vb{v}_2,\dots,\vb{v}_n\}$. Hence we've proven that if $\mathcal{H}$ can scatter $n + 1$ data vectors, $\mathcal{H}^\prime$ can scatter $n$ data vectors. \\ 
- Therefore $d^\prime_{VC} + 1 \geq d_{VC}$
- We now have $d^\prime_{VC} + 1 = d_{VC}$ \\
- Hence the VC dimension of $\mathcal{H}^\prime$ 
+ Therefore $d^\prime_{VC} + 1 \geq d_{VC}$ \\
+So $d^\prime_{VC} + 1 = d_{VC}$ \\
+\medbreak
+ Hence the VC dimension of $\mathcal{H}^\prime$ is upper-bounded by
  \[
-   d_{VC} = \tilde{d} + 1
+   d_{VC} \leq \tilde{d} + 1
  \]
  Where $\tilde{d}$ is the largest integer such that 
  \[
