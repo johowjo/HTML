@@ -1,0 +1,333 @@
+\documentclass[11pt]{article}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{tikz}
+\usepackage{xeCJK}
+\usepackage{physics}
+\usepackage{multirow,booktabs}
+% \usepackage[table]{xcolor}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{unicode-math}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage{calc}
+\usepackage{multicol}
+\usepackage{cancel}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\let\mathbb\relax
+\DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}
+\newlength{\tabcont}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+\usepackage{empheq}
+\usepackage{framed}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\linespread{1.2}
+\graphicspath{{./}}
+\setCJKmainfont[AutoFakeBold = 3, AutoFakeSlant = 4]{BiauKaiTC}
+\colorlet{shadecolor}{orange!15}
+\parindent 0in
+\parskip 12pt
+\geometry{margin=1in, headsep=0.25in}
+\graphicspath{{./}}
+\theoremstyle{definition}
+\newtheorem{thr}{Theorem}
+\newtheorem{lma}{Lemma}
+\newtheorem{defn}{Definition}
+\newtheorem{reg}{Rule}
+\newtheorem{exer}{Exercise}
+\newtheorem{note}{Note}
+\newtheorem{asmp}{Assumption}
+\begin{document}
+\setcounter{section}{0}
+\title{Title}
+
+\thispagestyle{empty}
+\begin{center}
+  {\large \bf HTML HW3} \\ 
+  B12901022 廖冠豪
+\end{center}
+\large{\textbf{In this problem we use $\{-1, +1\}$ to denote boolean values (outcome of binary classification)}}
+\section*{5}
+We consider hypotheses $h_1, h_2: \mathbb{R}\rightarrow\{-1, +1\}$, where 
+\begin{align*}
+  h_1(x) &= \text{sign}(x) \\
+  h_2(x) &= -\text{sign}(x)
+\end{align*}
+and hypotheses sets $\mathcal{H}_1 = \{h_1\}$ and $\mathcal{H}_2 = \{h_2\}$. \\ 
+As both $\mathcal{H}_1$ and $\mathcal{H}_2$ only contain one hypothesis, their VC dimension are both $0$.
+\[
+  d_{VC}(\mathcal{H}_1) = d_{VC}(\mathcal{H}_2) = 0
+\]
+Now consider the hypotheses set $\mathcal{H} = \mathcal{H}_1\cup\mathcal{H}_2$, and $x = 1$. We have $h_1(x) = +1$ and $h_2(x) = -1$, so $\mathcal{H}$ can shatter a set of one data vector and its VC dimension is hence greater than or equal to 1. \\ 
+We conclude that
+\begin{align*}
+  d_{VC}(\mathcal{H}_1\cup\mathcal{H}_2)\geq1>d_{VC}(\mathcal{H}_1) + d_{VC}(\mathcal{H}_2) = 0
+\end{align*}
+Therefore we have disproved the statement.
+\newpage
+\large{\textbf{In this problem we use $\{-1, +1\}$ to denote boolean values (outcome of binary classification)}}
+\section*{6}
+In the super-market case, we hope to find $f(\vb{x})$ that minimizes
+\[
+  \underset{\vb{x}, y\sim P(\vb{x}, y)}{\mathbb{E}}\left[10P(+1|\vb{x})\llbracket f(\vb{x} = -1)\rrbracket+ P(-1|\vb{x})\llbracket f(\vb{x} = +1)\rrbracket \right]
+\]
+We can see that for any $\vb{x}$ exactly one out of $f(\vb{x}) = +1$ and $f(\vb{x}) = -1$ is true, so it would be optimal to choose an $\alpha$ such that the one that contributes to a smaller value in $\mathbb{E}$ is always chosen(i.e. $f(\vb{x})= -1$ if $10P(+1|\vb{x})$ is greater than $P(-1|\vb{x})$, and vice versa) \\
+\begin{align*}
+  &\begin{cases}
+    P(+1|\vb{x}) + P(-1|\vb{x}) = 1 \\ 
+    10P(+1|\vb{x}) \geq P(-1|\vb{x}) \\ 
+  \end{cases} \\ 
+  &\implies P(+1|\vb{x}) \geq \frac{1}{11}
+\end{align*}
+By the analysis above, we can see that the optimal choice of $\alpha$ is $\frac{1}{11}$, and we have the mini-target
+\[
+  f_{\text{MKT}}(\vb{x}) = \text{sign}(P(y = +1|\vb{x}) - \frac{1}{11})
+\]
+\newpage
+\large{\textbf{In this problem we use $\{-1, +1\}$ to denote boolean values (outcome of binary classification)}}
+\section*{7}
+\begin{align*}
+  E^{(1)}_{\text{out}}(h) &= \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})\llbracket h(\vb{x}) \neq f(\vb{x})\rrbracket \\ 
+  E^{(2)}_{\text{out}}(h) &= \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})\left(P(-1|\vb{x})\llbracket h(\vb{x}) = +1\rrbracket + P(+1|\vb{x})\llbracket h(\vb{x}) = -1\rrbracket\right) \\ 
+  E^{(2)}_{\text{out}}(f) &= \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})\left(P(-1|\vb{x})\llbracket f(\vb{x}) = +1\rrbracket + P(+1|\vb{x})\llbracket f(\vb{x}) = -1\rrbracket\right) \\ 
+\end{align*}
+We see that 
+\begin{align*}
+  E^{(1)}_{\text{out}}(h) + E^{(2)}_{\text{out}}(f) &= \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})\left(P(-1|\vb{x})\llbracket f(\vb{x}) = +1\rrbracket + P(+1|\vb{x})\llbracket f(\vb{x}) = -1\rrbracket + \llbracket h(\vb{x}) \neq f(\vb{x})) \rrbracket\right)
+\end{align*}
+Given $h(\vb{x}), f(\vb{x})$, define 
+\begin{align*}
+  a(\vb{x}) &= P(-1|\vb{x})\llbracket f(\vb{x}) = +1\rrbracket + P(+1|\vb{x})\llbracket f(\vb{x}) = -1\rrbracket + \llbracket h(\vb{x}) \neq f(\vb{x})) \rrbracket \\
+  b(\vb{x}) &= P(-1|\vb{x})\llbracket h(\vb{x}) = +1\rrbracket + P(+1|\vb{x})\llbracket h(\vb{x}) = -1\rrbracket
+\end{align*} 
+We then consider the four different cases for $h(\vb{x}), f(\vb{x})$. \\ 
+\subsection*{Case 1: $h(\vb{x}) = +1, f(\vb{x})= +1$} 
+\begin{align*}
+  a(\vb{x}) &= P(-1|\vb{x}) \\ 
+  b(\vb{x}) &= P(-1|\vb{x}) \\ 
+\end{align*}
+\subsection*{Case 2: $h(\vb{x}) = +1, f(\vb{x})= -1$} 
+\begin{align*}
+  a(\vb{x}) &= P(+1|\vb{x}) + 1 \\ 
+  b(\vb{x}) &= P(-1|\vb{x}) \\
+\end{align*}
+\subsection*{Case 3: $h(\vb{x}) = -1, f(\vb{x})= -1$} 
+\begin{align*}
+  a(\vb{x}) &= P(+1|\vb{x}) \\ 
+  b(\vb{x}) &= P(+1|\vb{x}) \\ 
+\end{align*}
+\subsection*{Case 4: $h(\vb{x}) = -1, f(\vb{x})= +1$} 
+\begin{align*}
+  a(\vb{x}) &= P(-1|\vb{x}) + 1 \\ 
+  b(\vb{x}) &= P(+1|\vb{x}) \\
+\end{align*}
+We can see that for all possible cases we have $a(\vb{x}) \geq b(\vb{x})$. \\ 
+Hence 
+\begin{align*}
+  E^{(1)}_{\text{out}}(h) + E^{(2)}_{\text{out}}(f) &= \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})a(\vb{x}) \geq E^{(2)}_{\text{out}}(h) = \sum_{\vb{x}\sim P(\vb{x})}P(\vb{x})b(\vb{x})
+\end{align*}
+$\mathbb{Q}.\mathbb{E}.\mathbb{D}.$ \\
+\medbreak
+\textit{Note that when dealing with a continuous distribution of $\vb{x}$, we only need to change the summation to integral , and the following argument applies.}
+\newpage
+\section*{8}
+Assuming that $X^TX$ is invertible, we can express $\vb{w}_{\text{LIN}}$ in the following form
+\[
+  \vb{w}_{\text{LIN}} = (X^TX)^{-1}X^T \vb{y}
+\]
+Now if we replace $x_0$ with 1126, we get the new $X$ matrix
+\[
+  X^\prime = XD^\prime
+\]
+Where $D^\prime$ is the diagonal matrix with 
+\[
+  D^\prime_{ij} = 
+  \begin{cases}
+    1126 & i = j = 0 \\
+    1 & i = j \neq 0 \\
+    0 & \text{else}
+  \end{cases}
+\]
+
+Clearly ${D^\prime}^{-1}$ exists, and $D^\prime$ is symmetric, so
+\[
+  ({X^\prime}^{T}X^\prime)({D^\prime}^{-1}{(X^TX)}^{-1}{D^\prime}^{-1}) \\ 
+  = D^\prime(X^TX)D^\prime{D^\prime}^{-1}{(X^TX)}^{-1}{D^\prime}^{-1} = I
+\]
+So $({X^\prime}^{T}X^\prime)$ is invertible with 
+\[
+  {({X^\prime}^TX^\prime)}^{-1} = {D^\prime}^{-1}{(X^TX)}^{-1}{D^\prime}^{-1}
+\]
+Hence we can repeat the linear regression procedure and obtain
+\begin{align*}
+  \vb{w}_{\text{LUCKY}} &= {({X^\prime}^TX^\prime)}^{-1}{X^\prime}^T\vb{y} \\ 
+  &= {D^\prime}^{-1}{(X^TX)}^{-1}{D^\prime}^{-1}{D^\prime}^{-1}D^\prime X^T \vb{y}\\ 
+  &= {D^\prime}^{-1}{(X^TX)}^{-1}{D^\prime}^{-1}X^T\vb{y} \\ 
+  &= {D^\prime}^{-1}\vb{w}_{\text{LIN}}
+\end{align*}
+Hence we have proved the statement and found the diagonal matrix $D = {D^\prime}^{-1}$
+\[
+  D{ij} = 
+  \begin{cases}
+    \frac{1}{1126} & i = j = 0 \\
+    1 & i = j \neq 0 \\
+    0 & \text{else}
+  \end{cases}
+\]
+\newpage
+\large{\textbf{In this problem we use $\{-1, +1\}$ to denote boolean values (outcome of binary classification)}}
+\section*{9}
+Let $f(\vb{x})$ be the target function we want to approximate with $\tilde{h}(\vb{x})$. \\
+Consider $\mathcal{D} = \{(\vb{x}_1, y_1),(\vb{x}_2, y_2)\dots(\vb{x}_N, y_N),\}, \quad y_i\in\{-1, +1\}$. \\ 
+The probability that $f$ generates $\mathcal{D}$ is
+\[
+  P(\vb{x}_1)f(\vb{x}_1)\times P(\vb{x}_2)(1 - f(\vb{x}_2))\times\dots\times P(\vb{x}_N)(1 - f(\vb{x}_N))
+\]
+The likelihood that $\tilde{h}$ generates $\mathcal{D}$ is 
+\[
+  P(\vb{x}_1)h(\vb{x}_1)\times P(\vb{x}_2)(1 - h(\vb{x}_2))\times\dots\times P(\vb{x}_N)(1 - h(\vb{x}_N))
+\]
+Also, 
+\begin{align*}
+  1 - \tilde{h}(\vb{x}) &= 1 - \frac{1}{2}(\frac{\vb{w}^T\vb{x}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}} + 1) \\ 
+  &= \frac{1}{2}(\frac{-\vb{w}^T\vb{x}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}} + 1) \\ 
+  &= \tilde{h}(-\vb{x})
+\end{align*}
+Therefore the likelihood for some hypothesis $\tilde{h}$ is proportional to
+\[
+  \prod^N_{n = 1}\widetilde{h}(y_n\vb{x}_n)
+\]
+% The optimal likehoold is 
+% \begin{align*}
+%   &\max_h \text{likehood of }\tilde{h}\propto\prod^N_{n = 1}\tilde{h}(y_n\vb{x}_n) \\ 
+%   &= \max_{\vb{w}}\text{likehood of }\vb{w}\propto\prod^N_{n = 1}(\frac{1}{2}(\frac{y_n\vb{w}^T\vb{w}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}})) \\ 
+% \end{align*}
+% Hence we hope to maximize
+% \begin{align*}
+%   \ln{\prod^N_{n = 1}(\frac{1}{2}(\frac{y_n\vb{w}^T\vb{w}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}}))  }
+%   &= 
+% \end{align*}
+We hope to find
+\begin{align*}
+  \arg\max_{\vb{w}} \prod_{n=1}^{N} \tilde{h}(y_n\vb{x}_n) &= \arg\max_{\vb{w}} \prod_{n=1}^{N} \left(\frac{1}{2}\left(\frac{y_n \, (\vb{w}^T \vb{x}_n)}{\sqrt{1 + (\vb{w}^T \vb{x}_n)^2}} + 1\right)\right) \\ 
+  &= \arg\max_{\vb{w}} \ln \left( \prod_{n=1}^{N} \frac{1}{2}\left( \frac{y_n \, (\vb{w}^T \vb{x}_n)}{\sqrt{1 + (\vb{w}^T \vb{x}_n)^2}} + 1\right) \right) \\ 
+  &= \arg\max_{\vb{w}} \sum_{n=1}^{N} \ln \left(\frac{1}{2}\left( \frac{y_n \, (\vb{w}^T \vb{x}_n)}{\sqrt{1 + (\vb{w}^T \vb{x}_n)^2}} + 1\right) \right)  \\
+  &= \arg\min_{\vb{w}} \frac{1}{N}\sum_{n=1}^{N} -\ln \left(\frac{1}{2}\left( \frac{y_n \, (\vb{w}^T \vb{x}_n)}{\sqrt{1 + (\vb{w}^T \vb{x}_n)^2}} + 1\right) \right) \\
+  &= \arg\min_{\vb{w}}\frac{1}{N}\sum_{n=1}^{N}\text{err}(\vb{w},\vb{x}_n,y_n)
+\end{align*}
+Hence we've found the error function 
+\begin{align*}
+  \text{err}(\vb{w}, \vb{x}_n, y_n) &= -\ln \left(\frac{1}{2}\left(\frac{y_n\vb{w}^T\vb{x}_n}{\sqrt{1 + (\vb{w}^T\vb{x}_n)^2}} + 1\right)\right) \\ 
+  &= \ln \frac{2\sqrt{1 + (\vb{w}^T\vb{x}_n)^2}}{y_n\vb{w}^T\vb{x}_n + \sqrt{1 + (\vb{w}^T\vb{x}_n)^2}}
+\end{align*}
+Therefore 
+\[
+  \tilde{E}_{\text{in}}(\vb{w}) = \frac{1}{N}\sum_{n=1}^{N}\ln\left( \frac{2\sqrt{1 + (\vb{w}^T\vb{x}_n)^2}}{y_n\vb{w}^T\vb{x}_n + \sqrt{1 + (\vb{w}^T\vb{x}_n)^2}}\right)
+\]
+We can then compute $\nabla\tilde{E}_{\text{in}}(\vb{w})$
+\begin{align*}
+  (\nabla\tilde{E}_{\text{in}}(\vb{w}))_i &= \pdv{\tilde{E}_{\text{in}}(\vb{w})}{\vb{w}_i} \\ 
+  &= \sum_{n=1}^N \pdv{\ln \bigcirc}{\bigcirc}\pdv{\bigcirc}{\square}\pdv{\square}{\vb{w}_i}\quad \left(\bigcirc = \left( \frac{2\sqrt{1 + \square^2}}{y_n\square + \sqrt{1 + \square^2}}\right), \square = \vb{w}^T\vb{x}_n\right) \\
+  &= \frac{1}{N}\sum_{n=1}^N \left(\frac{1}{\bigcirc}\right)\left(-\frac{2y_n}{\sqrt{1 + \square^2}\left(y_n\square + \sqrt{1 + \square^2}\right)^2}\right)\left(\vb{x}_{n,i}\right) \\
+  &= \frac{1}{N}\sum_{n=1}^N\left(-\frac{y_n\vb{x}_{n, i}}{(1 + (\vb{w}^T{x}_n)^2)(y_n\vb{w}^T\vb{x}_n + \sqrt{1 + (\vb{w}^T\vb{w}_n)^2})}\right)
+\end{align*}
+Therefore we have
+\[
+  \nabla\tilde{E}_{\text{in}}(\vb{w}) = \frac{1}{N}\sum_{n=1}^N\left(-\frac{y_n\vb{x}_{n}}{(1 + (\vb{w}^T{x}_n)^2)(y_n\vb{w}^T\vb{x}_n + \sqrt{1 + (\vb{w}^T\vb{w}_n)^2})}\right)
+\]
+
+% \begin{align*}
+%   &\text{argmax}_h\prod^N_{n = 1}\tilde{h}(y_n\vb{x}_n)   \\ 
+%   &= \text{argmax}_\vb{w}\prod^N_{n = 1}(\frac{1}{2}(\frac{y_n\vb{w}^T\vb{w}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}})) \\ 
+%   &= \text{argmax}_{\vb{w}}\ln{\prod^N_{n = 1}(\frac{1}{2}(\frac{y_n\vb{w}^T\vb{w}}{\sqrt{1 + (\vb{w}^T\vb{x})^2}}))} \\ 
+% \end{align*}
+
+
+\newpage
+\section*{10}
+\includegraphics[width = \textwidth]{code/P10-3.jpg} \\ 
+From the scatter plot we can see $E_{out}$ is significantly larger than $E_{out} $, for the majority of data points $E_{in}$ ranges between $0$ to $2\times 10^4$ and the maxima for $E_{in}$ is about $1.2\times 10^5$. On the other hand, for most data points $E_{out}$ is less than $40$, and the maxima of $E_{out}$ is no less than $180$. \\ 
+This difference between $E_{out}$ and $E_{in}$ is consistent with theory, in lecture we're introduced with the equations
+\begin{align*}
+  \overline{E_{out}} &= \textbf{noise }\text{level}\cdot (1 + \frac{d + 1}{N}) \\
+  \overline{E_{in}} &= \textbf{noise }\text{level}\cdot (1 - \frac{d + 1}{N}) \\
+\end{align*}
+The expected generalization error is $\frac{2(d + 1)}{N}$. In this case $N = 32$ is relatively small, so the difference between $E_{out}$ an $E_{in}$ is quite large. \\ 
+\includegraphics[width = \textwidth]{Screenshot 2024-10-19 at 2.26.21 AM.png}
+Code snapshot: \\ 
+\newpage
+\section*{11}
+\includegraphics[width = \textwidth]{code/Screenshot 2024-10-19 at 1.49.34 AM.png} \\ 
+From the figure we see that for small $N$, as in problem 10, the difference between $E_{out}$ and $E_{in}$ is large, with $E_{out}$ reaching almost $7000$ and $E_{in}$ approximately $27$ for $N = 25$. \\ 
+As $N$ increases, $E_{out}$ decreases rapidly until it reaches the same level as $E_{in}$(around $100$). During the process, $E_{in}$ also increases slightly. At approximately $N = 400$, $E_{out}$ and $E_{in}$ become almost identical
+For larger $N$, $E_{out}$ and $E_{in}$ are very stable, and their value don't change much as $N$ increases to larger values. \\ 
+This result is also consistent with theory, from the two equations
+\begin{align*}
+  \overline{E_{out}} &= \textbf{noise }\text{level}\cdot (1 + \frac{d + 1}{N}) \\
+  \overline{E_{in}} &= \textbf{noise }\text{level}\cdot (1 - \frac{d + 1}{N}) \\
+\end{align*}
+we see that as $N$ becomes larger, both $E_{out}$ and $E_{in}$ converges to the noise level $\sigma^2$. This phenomenon is clearly reflected in the figure, as $E_{out}$ and $E_{in}$ approaches the same value for large $N$. \\ 
+\includegraphics[width = \textwidth]{Screenshot 2024-10-19 at 2.27.56 AM.png}
+Code snapshot: \\ 
+\newpage
+\section*{12}
+\includegraphics[width = \textwidth]{code/P12-1.jpg} \\ 
+The figure above is mostly similar to that in problem 10 in their trend of growth(increase/decrease). \\  
+But there are some differences.\\ 
+Firstly we see that the value to which $E_{out}$ and $E_{in}$ converge is different. This may be due to the noise level term $\sigma^2$ in the equation. For this set the noise level for each dimension of $\vb{x}$ may be different, so training with different dimensions of $\vb{x}$ may lead to different $\sigma^2$ values. \\ 
+Secondly, the difference between $E_{in}$ and $E_{out}$ for small $N$ and large $N$ (stable value) is larger in problem 11. We can see that in problem 11 $E_{out}$ decreased by more than $99\%$($\approx 7000\rightarrow\approx 100$), and $E_{in}$ increased by about $300\%$($\approx 27\rightarrow \approx 100$), whereas in this problem $E_{out}$ only decreased by approximately $70\%$ ($\approx1250\rightarrow \approx 400$) and $E_{in}$ only increased by about $100\%$($\approx200\rightarrow\approx 400$). This is due to the difference in $d$.\\ 
+From the equations 
+\begin{align*}
+  \overline{E_{out}} &= \textbf{noise }\text{level}\cdot (1 + \frac{d + 1}{N}) \\
+  \overline{E_{in}} &= \textbf{noise }\text{level}\cdot (1 - \frac{d + 1}{N}) \\
+\end{align*}
+we see that the difference between $E_{in}$ and $E_{out}$ at small $N$ and their value at large $N$ is $\frac{d + 1}{N}$, hence for larger $d$ and same $N$, $E_{in}$ and $E_{out}$ differs more with their asymptotic value. This is consistent with the cases for problem 11 and 12, as in problem 11 $d = 13$ and in problem 12 $d = 3$. \\
+\includegraphics[width = \textwidth]{Screenshot 2024-10-20 at 3.22.37 AM.png} 
+Code snapshot: \\ 
+\newpage
+\large{\textbf{In this problem we use $\{-1, +1\}$ to denote boolean values (outcome of binary classification)}}
+\section*{13}
+\textbf{This problem is done in collaboration with B12901035 鄭宇彥} \\
+% First we aim to prove the following statement
+% \begin{center}
+%   Let $\mathcal{S}$ be the set that contains all $2^N$ dichotomies of some $N$ data vectors, that is, $\mathcal{S}$ contains all $2^N$ distinct boolean vectors of length $N$. \\ 
+%   There exist subsets of $\mathcal{S}$ $\mathcal{S}_0, \mathcal{S}_1, \mathcal{S}_2\dots\mathcal{S}_N$ such that
+%   \begin{align}
+%     &\mathcal{S}_i\cap\mathcal{S}_j = \phi\quad\forall i\neq j \\
+%     &\mathcal{S}_i \quad \text{contains }{N \choose i}\text{elements} \\
+%   \end{align}
+% \end{center}
+Let $\mathcal{S}$ be the set that contains all $2^N$ dichotomies of some $N$ data vectors $\vb{x}\in\mathcal{D}$, that is, $\mathcal{S}$ contains all $2^N$ distinct boolean vectors of length $N$. \\ 
+Let $\mathcal{S}_0, \mathcal{S}_1, \mathcal{S}_2\dots\mathcal{S}_N$ be subsets of $S$. The subset $\mathcal{S}_i$ contains all the dichotomies where exactly $i$ data vectors are classified as $+1$. \\ 
+From the definition above, we can see that $\mathcal{S}_i$ has ${N \choose i}$ elements, and any two of these subsets are mutually exclusive. \\ 
+\medskip
+Now consider the set $\mathcal{S}\setminus(\mathcal{S}_k\cup\mathcal{S}_{k + 1}\cup\dots\cup\mathcal{S}_N)$ for $k\in\{0, 1, 2,\dots, N\}$. For the dichotomies in this set, no $k$ data vectors are scattered. This is true because for any $k$ data vectors, this set does not contain any dichotomy where all these $k$ data vectors are classified as $+1$, since any such dichotomy must be in one of $\mathcal{S}_k,\mathcal{S}_{k + 1},\dots,\mathcal{S}_N$. \\ 
+The number of elements in $\mathcal{S}\setminus(\mathcal{S}_k\cup\mathcal{S}_{k + 1}\cup\dots\cup\mathcal{S}_N)$ is 
+\[
+  2^N - (\sum^N_{i = k}{N \choose i}) = \sum^{k - 1}_{i = 0}{N \choose i}
+\]
+Hence we have
+\[
+  B(N, k) \geq \sum^{k - 1}_{i = 0}{N \choose i} \quad \forall k \in \{0, 1, 2,\dots, N\}
+\]
+\medskip 
+Lastly, for $k\in\{N + 1, N + 2, N + 3\dots\}$ obviously $B(N, k) = 2^N = \sum^{k - 1}_{i = 0}{N \choose i}$, as these $N$ data vectors can be shattered. \\ 
+Therefore, we have proven
+\[
+  B(N, k) \geq \sum^{k - 1}_{i = 0}{N \choose i}
+\]
+\end{document}
+
+
