@@ -82,8 +82,14 @@ void init_params() {
 	flag_p_specified = 0;
 	flag_solver_specified = 1;
 	flag_find_parameters = 0;
-	bias = -1;
+	bias = 1;
 }
+
+struct result {
+  double e_out;
+  int non_zero_entries;
+  int best_lambda;
+};
 
 void init_datasets() {
   std::fstream train_data_out;
@@ -209,7 +215,7 @@ double calc_e(model *model_) {
   return e_in;
 }
 
-double experiment() {
+result experiment() {
   char sub_train_data[] = "./p12_data/train_data.txt";
   char train_data[] = "./p12_data/origin_data.txt";
   char validation_data[] = "./p12_data/validation_data.txt";
@@ -277,7 +283,11 @@ double experiment() {
   free_and_destroy_model(&model_5);
   free_and_destroy_model(&model_6);
   free_prob();
-  return err;
+
+  result res;
+  res.e_out = err;
+  res.best_lambda = best;
+  return res;
 }
 
 int main(int argc, char **argv)
@@ -290,14 +300,20 @@ int main(int argc, char **argv)
   
   // main part
   std::fstream data_out;
+  std::fstream best_lambda_out;
   data_out.open("./p12_data/p12.txt");
+  best_lambda_out.open("./p12_data/best_lambda.txt");
   for(int i = 0; i < 1126; i++) {
     std::cout << "experiment number " << i << ":\n";
-    double err = experiment();
+    result res = experiment();
+    double err = res.e_out;
+    int best = res.best_lambda;
     data_out << err << '\n';
+    best_lambda_out << best << '\n';
     printf("E_out : %f\n", err);
   }
   data_out.close();
+  best_lambda_out.close();
   ////////////////////////////////
 
 	destroy_param(&param);

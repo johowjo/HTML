@@ -81,7 +81,7 @@ void init_params() {
 	flag_p_specified = 0;
 	flag_solver_specified = 1;
 	flag_find_parameters = 0;
-	bias = -1;
+	bias = 1;
 }
 
 void free_prob() {
@@ -108,8 +108,7 @@ void init_datasets(int seed) {
   std::uniform_int_distribution<> dist(0, lines - 1);
 
   while(nums.size() < n) {
-    int random_number = dist(gen);
-    if(nums.find(random_number) == nums.end()) nums.insert(random_number);
+    nums.insert(dist(gen));
   }
   ///////////////////// 
   train_data.open("./p11_data/train_data.txt");
@@ -160,6 +159,12 @@ void train_model(int n) {
   }
 }
 
+struct result {
+  double e_out;
+  int non_zero_entries;
+  int best_lambda;
+};
+
 double calc_e(model *model_) {
   double e_in = 0;
   int l = prob.l;
@@ -170,7 +175,7 @@ double calc_e(model *model_) {
   return e_in;
 }
 
-double experiment(int seed) {
+result experiment(int seed) {
   init_datasets(seed);
   char sub_train_data[] = "./p11_data/sub_train_data.txt";
   char train_data[] = "./p11_data/train_data.txt";
@@ -184,7 +189,7 @@ double experiment(int seed) {
   }
   free_prob();
   read_problem(validation_data);
-  // find best w
+  // find best lambda 
   double tmp;
   model_ = model_1;
   double mnm = calc_e(model_1);
@@ -238,7 +243,11 @@ double experiment(int seed) {
   free_and_destroy_model(&model_5);
   free_and_destroy_model(&model_6);
   free_prob();
-  return err;
+
+  result res;
+  res.best_lambda = best;
+  res.e_out = err;
+  return res;
 }
 
 int main(int argc, char **argv)
@@ -249,14 +258,19 @@ int main(int argc, char **argv)
   
   // main part
   std::fstream data_out;
+  std::fstream best_lambda_out;
   data_out.open("./p11_data/p11.txt");
+  best_lambda_out.open("./p11_data/best_lambda.txt");
   for(int i = 0; i < 1126; i++) {
     std::cout << "experiment number " << i << ":\n";
-    double err = experiment(i);
+    result res = experiment(i);
+    double err = res.e_out;
+    best_lambda_out << res.best_lambda << '\n';
     data_out << err << '\n';
     printf("E_out : %f\n", err);
   }
   data_out.close();
+  best_lambda_out.close();
   ////////////////////////////////
 
 	destroy_param(&param);

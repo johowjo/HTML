@@ -65,6 +65,7 @@ double bias;
 struct result {
   double e_out;
   int non_zero_entries;
+  int best_lambda;
 };
 
 void init_params() {
@@ -83,7 +84,7 @@ void init_params() {
 	flag_p_specified = 0;
 	flag_solver_specified = 1;
 	flag_find_parameters = 0;
-	bias = -1;
+	bias = 1;
 }
 
 void free_prob() {
@@ -139,7 +140,6 @@ int calc_non_zero_entries(model *mod_) {
 }
 
 result experiment() {
-
   char input_file_name[] = "./p10_data/train_data.txt";
   char test_file_name[] = "./p10_data/test_data.txt";
 	read_problem(input_file_name);
@@ -199,6 +199,7 @@ result experiment() {
   result res;
   res.e_out = err;
   res.non_zero_entries = non_zero_entries;
+  res.best_lambda = best - 3;
   return res;
 }
 
@@ -222,6 +223,8 @@ int main(int argc, char **argv)
   // main part
   std::fstream data_out;
   std::fstream entries_out;
+  std::fstream best_lambda_out;
+  best_lambda_out.open("./p10_data/best_lambda.txt");
   data_out.open("./p10_data/p10.txt");
   entries_out.open("./p10_data/non_zero_entries.txt");
   for(int i = 0; i < 1126; i++) {
@@ -230,9 +233,11 @@ int main(int argc, char **argv)
     printf("E_out : %f\n", res.e_out);
     data_out << res.e_out << '\n';
     entries_out << res.non_zero_entries << '\n';
+    best_lambda_out << res.best_lambda << '\n';
   }
   data_out.close();
   entries_out.close();
+  best_lambda_out.close();
   ///////////////////////
 
 	destroy_param(&param);
