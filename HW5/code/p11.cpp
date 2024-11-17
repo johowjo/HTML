@@ -134,6 +134,16 @@ void init_datasets(int seed) {
   validation_data.close();
 }
 
+int calc_non_zero_entries(model *mod_) {
+  int count = 0;
+  int w_length = mod_->nr_feature;
+  for(int i = 0; i < w_length; i++) {
+    if(mod_->w[i] != 0) count++;
+  }
+  
+  return count;
+}
+
 void train_model(int n) {
   param.C = pow(10, (double)(-n));
   if(n == -2) {
@@ -235,6 +245,11 @@ result experiment(int seed) {
 
   double err = calc_e(model_) / 1990;
 
+  result res;
+  res.best_lambda = best;
+  res.e_out = err;
+  res.non_zero_entries = calc_non_zero_entries(model_);
+
   free_and_destroy_model(&model_);
   free_and_destroy_model(&model_1);
   free_and_destroy_model(&model_2);
@@ -244,9 +259,6 @@ result experiment(int seed) {
   free_and_destroy_model(&model_6);
   free_prob();
 
-  result res;
-  res.best_lambda = best;
-  res.e_out = err;
   return res;
 }
 
@@ -259,18 +271,22 @@ int main(int argc, char **argv)
   // main part
   std::fstream data_out;
   std::fstream best_lambda_out;
+  std::fstream non_zero;
   data_out.open("./p11_data/p11.txt");
   best_lambda_out.open("./p11_data/best_lambda.txt");
+  non_zero.open("./p11_data/non_zero_entries.txt");
   for(int i = 0; i < 1126; i++) {
     std::cout << "experiment number " << i << ":\n";
     result res = experiment(i);
     double err = res.e_out;
     best_lambda_out << res.best_lambda << '\n';
     data_out << err << '\n';
+    non_zero << res.non_zero_entries << '\n';
     printf("E_out : %f\n", err);
   }
   data_out.close();
   best_lambda_out.close();
+  non_zero.close();
   ////////////////////////////////
 
 	destroy_param(&param);

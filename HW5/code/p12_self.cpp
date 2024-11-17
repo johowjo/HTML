@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
@@ -51,6 +52,12 @@ struct feature_node *x_space;
 struct parameter param;
 struct problem prob;
 struct model* model_;
+struct model* model_1;
+struct model* model_2;
+struct model* model_3;
+struct model* model_4;
+struct model* model_5;
+struct model* model_6;
 int flag_cross_validation;
 int flag_find_parameters;
 int flag_C_specified;
@@ -75,7 +82,37 @@ void init_params() {
 	flag_p_specified = 0;
 	flag_solver_specified = 1;
 	flag_find_parameters = 0;
-	bias = -1;
+	bias = 1;
+}
+
+struct result {
+  double e_out;
+  int non_zero_entries;
+  int best_lambda;
+};
+
+void init_datasets() {
+  std::fstream train_data_out;
+  std::fstream validation_data_out;
+  std::fstream data_in;
+  data_in.open("./p12_data/origin_data.txt");
+  train_data_out.open("./p12_data/train_data.txt");
+  validation_data_out.open("./p12_data/validation_data.txt");
+
+  int count = 0;
+  std::string tmp;
+  while(getline(data_in, tmp)) {
+    if(count % 3 == 0) {
+      validation_data_out << tmp << '\n';
+    } else {
+      train_data_out << tmp << '\n';
+    }
+
+    count++;
+  }
+
+  train_data_out.close();
+  validation_data_out.close();
 }
 
 void free_prob() {
@@ -83,6 +120,31 @@ void free_prob() {
 	free(prob.x);
 	free(x_space);
 	free(line);
+}
+
+void train_model(int n) {
+  param.C = pow(10, (double)(-n));
+  if(n == -2) {
+    model_1 = train(&prob, &param);
+  }
+  else if(n == -1) {
+    model_2 = train(&prob, &param);
+  }
+  else if(n == 0) {
+    model_3 = train(&prob, &param);
+  }
+  else if(n == 1) {
+    model_4 = train(&prob, &param);
+  }
+  else if(n == 2) {
+    model_5 = train(&prob, &param);
+  }
+  else if(n == 3) {
+    model_6 = train(&prob, &param);
+  }
+  else {
+    printf("wrong n\n");
+  }
 }
 
 double cross_validation_error(int n) {
@@ -99,11 +161,49 @@ double cross_validation_error(int n) {
   return (double)correct / (double)prob.l;
 }
 
-struct result {
-  double e_out;
-  int non_zero_entries;
-  int best_lambda;
-};
+// void init_datasets(int seed) {
+//   // generate 8000 random distinct numbers in [0, 11875]
+//   std::ofstream clear1("./p11_data/sub_train_data.txt", std::ofstream::trunc);
+//   std::ofstream clear2("./p11_data/validation_data.txt", std::ofstream::trunc);
+//   clear1.close();
+//   clear2.close();
+//   std::fstream sub_train_data;
+//   std::fstream train_data;
+//   std::fstream validation_data;
+//   const int lines = 11876;
+//   const int n = 8000;
+//   std::set<int> nums;
+//
+//   std::mt19937 gen(seed);
+//   std::uniform_int_distribution<> dist(0, lines - 1);
+//
+//   while(nums.size() < n) {
+//     int random_number = dist(gen);
+//     if(nums.find(random_number) == nums.end()) nums.insert(random_number);
+//   }
+//   ///////////////////// 
+//   train_data.open("./p11_data/train_data.txt");
+//   sub_train_data.open("./p11_data/sub_train_data.txt");
+//   validation_data.open("./p11_data/validation_data.txt");
+//   std::string tmp;
+//   int count = 0;
+//
+//   while(getline(train_data, tmp)) {
+//     if(count == *(nums.begin())) {
+//       sub_train_data << tmp << '\n';
+//       nums.erase(nums.begin());
+//     }
+//     else {
+//       validation_data << tmp << '\n';
+//     }
+//
+//     count++;
+//   }
+//
+//   sub_train_data.close();
+//   train_data.close();
+//   validation_data.close();
+// }
 
 double calc_e(model *model_) {
   double e_in = 0;
@@ -116,40 +216,77 @@ double calc_e(model *model_) {
 }
 
 result experiment() {
-  char train_data[] = "./p12_data/train_data.txt";
+  char sub_train_data[] = "./p12_data/train_data.txt";
+  char train_data[] = "./p12_data/origin_data.txt";
+  char validation_data[] = "./p12_data/validation_data.txt";
   char test_data[] = "./p12_data/test_data.txt";
 
-  read_problem(train_data);
+  read_problem(sub_train_data);
 
-  int best = -2;
-  double mxm = cross_validation_error(-2);
-
-  for(int i = -1; i <= 3; i++) {
-    double tmp = cross_validation_error(i);
-    if(tmp >= mxm) {
-      mxm = tmp;
-      best = i;
-    }
-    printf("best accuracy: %f\n", tmp);
+  for(int i = -2; i <= 3; i++) {
+    train_model(i);
   }
+  free_prob();
 
-  printf("best log(lambda): %d\n", best);
-
+  // find best w
+  read_problem(validation_data);
+  double tmp;
+  model_ = model_1;
+  double mnm = calc_e(model_1);
+  int best = -2;
+  tmp = calc_e(model_2);
+  if(tmp <= mnm) {
+    model_ = model_2;
+    mnm = tmp;
+    best = -1;
+  }
+  tmp = calc_e(model_3);
+  if(tmp <= mnm) {
+    model_ = model_3;
+    mnm = tmp;
+    best = 0;
+  }
+  tmp = calc_e(model_4);
+  if(tmp <= mnm) {
+    model_ = model_4;
+    mnm = tmp;
+    best = 1;
+  }
+  tmp = calc_e(model_5);
+  if(tmp <= mnm) {
+    model_ = model_5;
+    mnm = tmp;
+    best = 2;
+  }
+  tmp = calc_e(model_6);
+  if(tmp <= mnm) {
+    model_ = model_6;
+    mnm = tmp;
+    best = 3;
+  }
+  free_prob();
+  ////////////////////////////////
+  printf("best: log(lambda): %d\n", best);
+  read_problem(train_data);
   param.C = pow(10, (double)(-best));
   model_ = train(&prob, &param);
-
   free_prob();
   read_problem(test_data);
-  
-  double err = calc_e(model_);
+
+  double err = calc_e(model_) / 1990;
 
   free_and_destroy_model(&model_);
+  free_and_destroy_model(&model_1);
+  free_and_destroy_model(&model_2);
+  free_and_destroy_model(&model_3);
+  free_and_destroy_model(&model_4);
+  free_and_destroy_model(&model_5);
+  free_and_destroy_model(&model_6);
   free_prob();
 
   result res;
-  res.e_out = err / 1990;
-  res.best_lambda = best; 
-
+  res.e_out = err;
+  res.best_lambda = best;
   return res;
 }
 
@@ -158,21 +295,25 @@ int main(int argc, char **argv)
   // initialization
   set_print_string_function(&print_null);
   init_params();
+
+  init_datasets();
   
   // main part
   std::fstream data_out;
-  std::fstream lambda_out;
+  std::fstream best_lambda_out;
   data_out.open("./p12_data/p12.txt");
-  lambda_out.open("./p12_data/best_lambda.txt");
+  best_lambda_out.open("./p12_data/best_lambda.txt");
   for(int i = 0; i < 1126; i++) {
     std::cout << "experiment number " << i << ":\n";
     result res = experiment();
     double err = res.e_out;
+    int best = res.best_lambda;
     data_out << err << '\n';
-    lambda_out << res.best_lambda << '\n';
+    best_lambda_out << best << '\n';
     printf("E_out : %f\n", err);
   }
   data_out.close();
+  best_lambda_out.close();
   ////////////////////////////////
 
 	destroy_param(&param);
