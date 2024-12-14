@@ -5,9 +5,7 @@
 #define pii pair<int, int>
 using namespace std;
 
-// int train_data[2000][500];
-// int train_data[500][2000];
-// int train_data_or[500][2000];
+int train_data_or[500][2000];
 pii train_data[500][2000];
 int test_data[500][600];
 int label[2000];
@@ -43,15 +41,14 @@ void read_data() {
     }
 
     for(int i = 0; i < 499; i++) {
-      // train_data_or[i][count] = stoi(tmp.substr(cols[i] + 1, spac[i + 1]));
-      train_data[i][count] = make_pair(stoi(tmp.substr(cols[i] + 1, spac[i + 1])), label[count]);
+      train_data_or[i][count] = stoi(tmp.substr(cols[i] + 1, spac[i + 1]));
+      train_data[i][count] = make_pair(stoi(tmp.substr(cols[i] + 1, spac[i + 1])), count);
       // train_data[i].push_back(make_pair(label[count], stoi(tmp.substr(cols[i] + 1, spac[i + 1]))));
     }
-    // train_data_or[499][count] = stoi(tmp.substr(cols[499] + 1, tmp.size()));
-    train_data[499][count] = make_pair(stoi(tmp.substr(cols[499] + 1, tmp.size())), label[count]);
+    train_data_or[499][count] = stoi(tmp.substr(cols[499] + 1, tmp.size()));
+    train_data[499][count] = make_pair(stoi(tmp.substr(cols[499] + 1, tmp.size())), count);
     // train_data[499].push_back(make_pair(label[count], stoi(tmp.substr(cols[499] + 1, tmp.size()))));
     
-
     count++;
   }
 
@@ -102,7 +99,7 @@ void init_params() {
   }
 }
 
-void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
+void find_best_hyp(int n, fstream &p10, fstream &p10_u, fstream &u_sum) {
   int opt_dim = -1;
   double opt_err = 1000000;
   double opt_t = -1;
@@ -110,16 +107,20 @@ void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
 
   double sum = 0;
   for(int i = 0; i < 2000; i++) sum += u[i];
+  u_sum << sum << '\n';
   // cout << sum << '\n';
 
   for(int i = 0; i < 500; i++) {
     double pos_err = 0;
     double neg_err = 0;
+
     for(int j = 0; j < 2000; j++) {
-      if(train_data[i][j].second == -1) {
-        pos_err += u[j] / sum;
+      if(label[train_data[i][j].second] == -1) {
+        // pos_err += u[j] / sum;
+        pos_err += u[train_data[i][j].second] / sum;
       } else {
-        neg_err += u[j] / sum;
+        // neg_err += u[j] / sum;
+        neg_err += u[train_data[i][j].second] / sum;
       }
     }
 
@@ -140,10 +141,10 @@ void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
       double pos_dif = 0;
       double neg_dif = 0;
       for(int k = theta[i][j - 1]; k < theta[i][j]; k++) {
-        if(train_data[i][k].second == 1) {
-          pos_dif += u[k] / sum;
+        if(label[train_data[i][k].second] == 1) {
+          pos_dif += u[train_data[i][k].second] / sum;
         } else {
-          neg_dif += u[k] / sum;
+          neg_dif += u[train_data[i][k].second] / sum;
         }
       }
 
@@ -155,7 +156,6 @@ void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
         cout << "iteration " << n << '\n';
         cout << "dimension: " << i << '\n';
         cout << pos_dif << ' ' << neg_dif << '\n';
-        // cout << pos_err << ' ' << neg_err;
         return;
       }
 
@@ -181,39 +181,30 @@ void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
   double e_u = opt_err;
   // cout << e_u << '\n';
   double dia = sqrt(1 / e_u - 1);
-  cout << "sum of u " << sum << '\n';
-  cout << "optimal error " << opt_err << '\n';
-  cout << "optimal theta " << opt_t << '\n';
-  cout << "optimal s " << opt_s << '\n';
-  cout << "optimal dimension " << opt_dim << '\n';
-  cout << "diamond " << dia << '\n';
+  // cout << "sum of u " << sum << '\n';
+  // cout << "optimal error " << opt_err << '\n';
+  // cout << "optimal theta " << opt_t << '\n';
+  // cout << "optimal s " << opt_s << '\n';
+  // cout << "optimal dimension " << opt_dim << '\n';
+  // cout << "diamond " << dia << '\n';
   // cout << dia << '\n';
   double e = 0;
   double e_ = 0;
+  vector<int> tmp;
   for(int i = 0; i < 2000; i++) {
-    if(train_data[opt_dim][i].first < opt_t && opt_s == train_data[opt_dim][i].second) {
-      e_ = e_ + u[i] / sum;
-      u[i] = u[i] * dia;
+    if(train_data[opt_dim][i].first < opt_t && opt_s == label[train_data[opt_dim][i].second]) {
+      e_ = e_ + u[train_data[opt_dim][i].second] / sum;
+      u[train_data[opt_dim][i].second] *= dia;
       e = e + 1;
-      // cout << '+' << '\n';
-    } else if(train_data[opt_dim][i].first > opt_t && opt_s != train_data[opt_dim][i].second) {
-      e_ = e_ + u[i] / sum;
-      u[i] = u[i] * dia;
-      // cout << '+' << '\n';
+    } else if(train_data[opt_dim][i].first > opt_t && opt_s != label[train_data[opt_dim][i].second]) {
+      e_ = e_ + u[train_data[opt_dim][i].second] / sum;
+      u[train_data[opt_dim][i].second] *= dia;
       e = e + 1;
     } else {
-      u[i] = u[i] / dia;
-      cout << i << ' ';
-      // cout << '-' << '\n';
+      u[train_data[opt_dim][i].second] /= dia;
+      tmp.push_back(train_data[opt_dim][i].second);
     }
   }
-
-  // cout << e_ << ' ' << opt_err << '\n';
-
-
-  // double sum_after = 0;
-  // for(int i = 0; i < 2000; i++) sum_after += u[i];
-  // cout << "U ratio " << sum_after / sum << '\n';
 
   dim[n] = opt_dim;
   // cout << opt_dim << '\n';
@@ -225,8 +216,8 @@ void find_best_hyp(int n, fstream &p10, fstream &p10_u) {
   p10_u << e_u << '\n';
 }
 
-void run_test(int n, fstream &ein, fstream &eout, fstream &p10, fstream &p10_u) {
-  find_best_hyp(n, p10, p10_u);
+void run_test(int n, fstream &ein, fstream &eout, fstream &p10, fstream &p10_u, fstream &u_sum) {
+  find_best_hyp(n, p10, p10_u, u_sum);
   double e_out = 0;
   for(int i = 0; i < 600; i++) {
     double score = 0;
@@ -265,8 +256,6 @@ void run_test(int n, fstream &ein, fstream &eout, fstream &p10, fstream &p10_u) 
     }
   }
 
-  // cout << e_in / 2000 << '\n';
-  // cout << e_out / 600 << '\n';
   ein << e_in / 2000 << '\n';
   eout << e_out / 600 << '\n';
 }
@@ -279,61 +268,14 @@ int main() {
   fstream eout("./e_out.txt");
   fstream p10("./p10.txt");
   fstream p10_u("./p10_u.txt");
+  fstream u_sum("./u.txt");
 
 
-  // run_test(0, ein, eout, p10, p10_u);
-  // double sum = 0;
-  // for(int i = 0; i < 2000; i++) sum += u[i];
-  // for(int i = 90; i < 91; i++) {
-  //   double pos_err = 0;
-  //   double neg_err = 0;
-  //   for(int j = 0; j < 2000; j++) {
-  //     if(train_data[i][j].second == -1) {
-  //       pos_err += u[j] / sum;
-  //     } else {
-  //       neg_err += u[j] / sum;
-  //     }
-  //   }
-  //
-  //   for(int j = 1; j < theta[i].size(); j++) {
-  //     double pos_dif = 0;
-  //     double neg_dif = 0;
-  //     for(int k = theta[i][j - 1]; k < theta[i][j]; k++) {
-  //       if(train_data[i][k].second == 1) {
-  //         pos_dif += u[k] / sum;
-  //         // cout << pos_dif << '\n';
-  //       } else {
-  //         neg_dif += u[k] / sum;
-  //       }
-  //     }
-  //
-  //     // cout << pos_dif << '\n';
-  //       
-  //     cout << pos_err << ' ' << neg_err << '\n';
-  //     cout << pos_dif << ' ' << neg_dif << '\n';
-  //
-  //     pos_err = pos_err + pos_dif - neg_dif;
-  //     neg_err = neg_err - pos_dif + neg_dif;
-  //     if(pos_err < 0 || pos_err > 1) {
-  //       cout << "error at:\n";
-  //       cout << "dimension: " << i << '\n';
-  //       cout << pos_dif << ' ' << neg_dif << '\n';
-  //       cout << pos_err << ' ' << neg_err;
-  //     }
-  //
-  //   }
-  // }
-
-
-  // run_test(0, ein, eout, p10, p10_u);
-  for(int i = 0; i < 1; i++) {
-    run_test(i, ein, eout, p10, p10_u);
+  for(int i = 0; i < 500; i++) {
+    run_test(i, ein, eout, p10, p10_u, u_sum);
     cout << i << '\n';
   }
-  // for(int i : theta[90]) {
-  //   cout << train_data[90][i].first << ' ';
-  // }
-  // for(int i = 0; i < theta[90].size(); i++) cout << theta[90][i] << ' ';
+  // for(int i = 0; i < 500; i++) cout << a[i] << ' ';
 
 
   return 0;
