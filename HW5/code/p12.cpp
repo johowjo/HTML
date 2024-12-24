@@ -75,7 +75,7 @@ void init_params() {
 	flag_p_specified = 0;
 	flag_solver_specified = 1;
 	flag_find_parameters = 0;
-	bias = -1;
+	bias = 1;
 }
 
 void free_prob() {
@@ -130,7 +130,6 @@ result experiment() {
       mxm = tmp;
       best = i;
     }
-    printf("best accuracy: %f\n", tmp);
   }
 
   printf("best log(lambda): %d\n", best);

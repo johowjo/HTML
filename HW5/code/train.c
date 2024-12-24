@@ -114,6 +114,8 @@ int main(int argc, char **argv)
 	read_problem(input_file_name);
 	error_msg = check_parameter(&prob,&param);
 
+  printf("bias: %f\n", bias);
+
 	if(error_msg)
 	{
 		fprintf(stderr,"ERROR: %s\n",error_msg);

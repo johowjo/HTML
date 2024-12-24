@@ -148,46 +148,43 @@ result experiment() {
   }
   // find best w
   double tmp;
-  model_ = model_1;
   double mnm = calc_e(model_1);
-  int best = 1;
+  int best = -2;
   tmp = calc_e(model_2);
   if(tmp <= mnm) {
-    model_ = model_2;
     mnm = tmp;
-    best = 2;
+    best = -1;
   }
   tmp = calc_e(model_3);
   if(tmp <= mnm) {
-    model_ = model_3;
     mnm = tmp;
-    best = 3;
+    best = 0;
   }
   tmp = calc_e(model_4);
   if(tmp <= mnm) {
-    model_ = model_4;
     mnm = tmp;
-    best = 4;
+    best = 1;
   }
   tmp = calc_e(model_5);
   if(tmp <= mnm) {
-    model_ = model_5;
     mnm = tmp;
-    best = 5;
+    best = 2;
   }
   tmp = calc_e(model_6);
   if(tmp <= mnm) {
-    model_ = model_6;
     mnm = tmp;
-    best = 6;
+    best = 3;
   }
+  param.C = pow(10, (double)(-best));
+  model_ = train(&prob, &param);
   free_prob();
   ///////////////////////////
   read_problem(test_file_name);
-  printf("best log(lambda): %d\n", best - 3);
+  printf("best log(lambda): %d\n", best);
   double err = calc_e(model_) / 1990; 
   int non_zero_entries = calc_non_zero_entries(model_);
 
+  free_and_destroy_model(&model_);
   free_and_destroy_model(&model_1);
   free_and_destroy_model(&model_2);
   free_and_destroy_model(&model_3);
@@ -199,7 +196,7 @@ result experiment() {
   result res;
   res.e_out = err;
   res.non_zero_entries = non_zero_entries;
-  res.best_lambda = best - 3;
+  res.best_lambda = best;
   return res;
 }
 
