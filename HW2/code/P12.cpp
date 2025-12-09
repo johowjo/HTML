@@ -30,7 +30,11 @@ double train(int seed){
   sort(data.begin(), data.end());
 
   srand(seed);
-  bool s = (double(rand()) / double(RAND_MAX)) > 0.5;
+  bool s;
+  double tmp = (double(rand()) / double(RAND_MAX));
+  if(tmp > 0.5) s = true;
+  else s = false;
+  cout << tmp << ' ';
   double t = double(rand()) / double(RAND_MAX) * 2 - 1;
   int count = 0;
   for(auto d : data){

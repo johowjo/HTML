@@ -310,9 +310,6 @@ First, a possible explanation to the positive relation between the number of SVs
 \par
 Second, the reason that the number of SVs is not affected by C might be that the model used in this problem can all separate the data vectors fairly well. That is, most data vectors are correctly classified, and there are few cases of violation. As a result, the penalty for violation, C, does not affect the training result, and hence the number of SVs much. \\ 
 \newpage
-Code Snapshot: \\ 
-\includegraphics[width = \textwidth]{p11.png} \\
-\newpage
 \section*{11}
 Table: \\
 \begin{center}
@@ -341,7 +338,7 @@ Furthermore, we see that with fixed $\gamma$, $\frac{1}{\norm{w}}$ decreases qui
 Second, larger $\gamma$ means that a more complex transform is used, and therefore the model has a higher degree of freedom when fitting the data vectors. Therefore, with a larger $\gamma$, the model can find a hyperplane that is further away from the data vectors, and hence the larger margin. \\
 \newpage
 Code Snapshot: \\
-\includegraphics[width = \textwidth]{p11.png} \\
+% \includegraphics[width = \textwidth]{p11.png} \\
 \newpage
 \section*{12}
 Histogram: \\ 
@@ -353,5 +350,5 @@ From the histogram above we see that value of the best $\gamma$ is either 0.01 o
 A possible explanation to this phenomenon is that when adopting validation, an overfitting model is punished in the model selection step. That is a model that overfits is likely to have high $E_\text{val}$ and wouldn't be chosen. As we're taught in class, a larger $\gamma$ in the Gaussian kernel means that there are more effective terms in the transform, and a more complex model is therefore allowed. Therefore, overfitting is more likely to occur, and the model's classifying performance judging by $E_\text{eval}$ is likely to be worse. As a result, out of the 128 experiments, most of the time the model with the lowest $\gamma$ factor in the Gaussian kernel performs the best, as it's less prone to overfitting. \\ 
 Nevertheless, the few cases where $\gamma = 0.1$ performs better then $\gamma = 0.01$ still implies that sometimes a more complex model does have better classifying performance. \\
 Code Snapshot: \\ 
-\includegraphics[width = \textwidth]{p12.png}
+% \includegraphics[width = \textwidth]{p12.png}
 \end{document}

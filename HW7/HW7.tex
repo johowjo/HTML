@@ -1,0 +1,427 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{tikz}
+\usepackage{xeCJK}
+\usepackage{physics}
+\usepackage{multirow,booktabs}
+% \usepackage[table]{xcolor}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{unicode-math}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage{calc}
+\usepackage{multicol}
+\usepackage{cancel}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\let\mathbb\relax
+\DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}
+\newlength{\tabcont}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+\usepackage{empheq}
+\usepackage{framed}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\linespread{1.2}
+\graphicspath{{./}}
+\setCJKmainfont[AutoFakeBold = 3, AutoFakeSlant = 4]{BiauKaiTC}
+\colorlet{shadecolor}{orange!15}
+\parindent 0in
+\parskip 12pt
+\geometry{margin=1in, headsep=0.25in}
+\graphicspath{{./}}
+\theoremstyle{definition}
+\newtheorem{thr}{Theorem}
+\newtheorem{lma}{Lemma}
+\newtheorem{defn}{Definition}
+\newtheorem{reg}{Rule}
+\newtheorem{exer}{Exercise}
+\newtheorem{note}{Note}
+\newtheorem{asmp}{Assumption}
+\begin{document}
+\setcounter{section}{0}
+\title{Title}
+
+\thispagestyle{empty}
+\section*{5}
+% Let the test set be 
+% \[
+%   \mathcal{D} = \{(y_1, \vb{x}_1), (y_2, \vb{x}_2), \dots, (y_N, \vb{x}_N)\}
+% \]
+% Let $\mathcal{G}$ be the set of binary classifiers , that is 
+% \[
+%   \mathcal{G} = \{g_1, g_2, \dots, g_{2M + 1}\}
+% \]
+% Define $\mathcal{G}^\prime_i\subseteq\mathcal{G}$ as the set of binary classifiers that wrongly classify $(y_i, \vb{x}_i)$, that is 
+% \[
+%   \mathcal{G}^\prime_n = \{g_t | g_t(\vb{x}_n)\neq y_n\}\quad n = 1, 2, \dots, N
+% \]
+% Define $\mathcal{D}^\prime_i\subseteq\mathcal{D}$ as the set of data wrongly classified by $g_i$, that is
+% \[
+%   \mathcal{D}^\prime_t = \{(y_n, \vb{x}_n) | g_t(\vb{x}_n) \neq y_n\}\quad t = 1, 2, \dots, 2M + 1
+% \]
+% Define $G^\prime$ as 
+% \[
+%   G^\prime = \{n | G(\vb{x}_n)\neq y_n\}
+% \]
+% For some set $V$ with a finite number of elements, denote the size (number of elements) of the set as $|V|$ \\
+% With these definitions, we have 
+% \begin{align*}
+%   &g_t = \frac{|\mathcal{D}^\prime_t|}{N},\quad t = 1, 2, \dots, 2M + 1 \\ 
+%   &E_\text{out}(G) = \frac{|G^\prime|}{N}
+% \end{align*}
+% \par
+% Notice that $g_t\in\mathcal{G}^\prime_n$ iff $(y_n, \vb{x}_n)\in\mathcal{D}^\prime_t$, so 
+% \begin{align*}
+%   &|\mathcal{G}^\prime_1\cup\mathcal{G}^\prime_2\cup\dots\cup\mathcal{G}^\prime_N| = |\mathcal{D}^\prime_1\cup\mathcal{D}^\prime_2\cup\dots\cup\mathcal{D}^\prime_{2M + 1}| \\ 
+%   \implies &\sum^N_{n = 1}|\mathcal{G}^\prime_n| = \sum^{2M + 1}_{t = 1}|\mathcal{D}^\prime_t|\quad(\text{by the definitions, clearly all $\mathcal{D}^\prime_t$ and $\mathcal{G}^\prime_n$ are disjoint})
+% \end{align*}
+Let $\vb{x}$ be from some probability distribution $P(\vb{x})$, that is
+\[
+  \vb{x} \sim P(\vb{x})
+\]
+Also, let the target function be $f(\vb{x})$
+Then we have
+\begin{align*}
+  E_\text{out}(G) &= \underset{x\sim P}{\mathbb{E}}[\llbracket f(\vb{x}) \neq G(\vb{x})\rrbracket] \\ 
+  &= \mathbb{P}[f(\vb{x})\neq G(\vb{x})]
+\end{align*}
+Observe that for some $\vb{x}$, if there are more than $M + 1$ different $t$ such that $g_t(\vb{x}) = 1$, then
+\begin{align*}
+  G(\vb{x}) &= \text{sign}\left(\sum^{2M + 1}_{t = 1}g_t(\vb{x})\right) \\ 
+  &= \text{sign}\left(\overbrace{1 + 1 +\dots + 1}^{\geq 2M + 1}\overbrace{-1 - 1 -\dots - 1}^{\leq 2M}\right) = 1
+\end{align*}
+and $G(\vb{x}) = 1$ \\ 
+Similarly, for some $\vb{x}$, if there are more than $M + 1$ different $t$ such that $g_t(\vb{x}) = -1$, then $G(\vb{x}) = -1$. \\ 
+From this observation, we can conclude that for some $(y_n, \vb{x}_n)\in\mathcal{D}$, $G$ wrongly classifies it if and only if there are more than $M + 1$ different $t$ such that $g_t$ wrongly classifies $(y_n, \vb{x}_n)$. \\ 
+Hence 
+\[
+  f(\vb{x}) \neq G(\vb{x}_n) \Longleftrightarrow \sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{w})\rrbracket \geq M + 1
+\]
+Therefore
+\begin{align*}
+  E_\text{out}(G) &= \mathbb{P}[f(\vb{x})\neq G(\vb{x})] \\ 
+  &= \mathbb{P}[\sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket \geq M + 1] \\ 
+  &= \sum^{2M + 1}_{m = M + 1}\left(\mathbb{P}[\sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket = m]\right) \\
+  &\leq \frac{1}{M + 1}\sum^{2M + 1}_{m = M + 1}\left(m\cdot\mathbb{P}[\sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket = m]\right) \\
+  &\leq \frac{1}{M + 1}\sum^{2M + 1}_{m = 1}\left(m\cdot\mathbb{P}[\sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket = m]\right) \\
+  &= \frac{1}{M + 1}\underset{x\sim P}{\mathbb{E}}[\sum^{2M + 1}_{t = 1}\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket]\\
+  &= \frac{1}{M + 1}\sum^{2M + 1}_{t = 1}\underset{x\sim P}{\mathbb{E}}[\llbracket f(\vb{x})\neq g_t(\vb{x})\rrbracket] \\ 
+  &= \frac{1}{M + 1}\sum^{2M + 1}_{t = 1}E_\text{out}(g_t) \\ 
+  &= \frac{1}{M + 1}\sum^{2M + 1}_{t = 1}e_t
+\end{align*}
+So $\frac{1}{M + 1}\sum^{2M + 1}_{t = 1}e_t$ is an upper bound for $E_\text{out}(G)$ \\ 
+We then prove that this bound is tight by constructing a case when $E_\text{out}(G)$ meets this bound. \\ 
+\par 
+Consider the case where $M = 1$, $\vb{x}$ is one-dimensional, and
+\begin{align*}
+  P(x) &= U[0, 1]\quad(\text{$U$ is the uniform distribution}) \\ 
+  f(x) &= 1 \\ 
+  g_1(x) &= 
+  \begin{cases}
+    +1 \quad x \leq \frac{1}{3} \\
+    -1 \quad \text{else} 
+  \end{cases} \\ 
+  g_2(x) &= 
+  \begin{cases}
+    +1 \quad \frac{1}{3} < x \leq \frac{2}{3} \\
+    -1 \quad \text{else} 
+  \end{cases} \\
+  g_3(x) &= 
+  \begin{cases}
+    +1 \quad \frac{2}{3} < x \\ 
+    -1 \quad \text{else} 
+  \end{cases}
+\end{align*}
+\newpage
+In this case, we can see that $e_1 = e_2 = e_3 = \frac{2}{3}$, and $E_\text{out}(G) = 1$ (at least two of $g_1, g_2, g_3$ are wrong). \\ 
+So 
+\[
+  \frac{1}{M + 1}\sum^{2M + 1}_{t = 1}e_t = \frac{\frac{2}{3}\cdot 3}{2} = 1 = E_\text{out}(G)
+\]
+and the bound is met. \\ 
+Therefore, we have proven that this is the tightest bound. \\ 
+Q.E.D.
+% Next, we prove its tightness by constructing a case when $E_\text{out}(G)$ meets this bound. \\ 
+% Consider the case where $\mathcal{D} = \{(y_1, \vb{x}_1), (y_2, \vb{x}_2), (y_3, \vb{x}_2)\}$ and $\mathcal{G} = \{g_1, g_2, g_3\}$. \\ 
+% Consider the case where
+% \begin{align*}
+%   \mathcal{D} &= \{(y_1, \vb{x}_1), (y_2, \vb{x}_2), (y_3, \vb{x}_2)\} \\
+%   \mathcal{G} &= \{g_1, g_2, g_3\} \\ 
+%   \mathcal{G}^\prime_1 &= \{g_2, g_3\} \\ 
+%   \mathcal{G}^\prime_2 &= \{g_3, g_1\} \\ 
+%   \mathcal{G}^\prime_3 &= \{g_1, g_2\} \\ 
+%   \mathcal{D}^\prime_1 &= \{(y_2, \vb{x}_2), (y_3, \vb{x}_3)\} \\ 
+%   \mathcal{D}^\prime_2 &= \{(y_3, \vb{x}_3), (y_1, \vb{x}_1)\} \\ 
+%   \mathcal{D}^\prime_3 &= \{(y_1, \vb{x}_1), (y_2, \vb{x}_2)\} \\ 
+% \end{align*}
+\newpage
+\section*{6}
+We know that in iteration $t$, $\vb{u}$ is updated in the following manner 
+\[
+  u_n^{(t + 1)} \leftarrow
+  \begin{cases}
+    u_n^{(t)}\cdot\sqrt{\frac{1 - \epsilon_t}{\epsilon_t}} & \llbracket y_n\neq g_t(\vb{x}_n)\rrbracket \\
+    u_n^{(t)}\cdot\sqrt{\frac{\epsilon_t}{1 - \epsilon_t}} & \llbracket y_n = g_t(\vb{x}_n)\rrbracket \\
+  \end{cases}
+\]
+Therefore
+\begin{align}
+  U_{t + 1} &= \sum^N_{n = 1}u_n^{(t + 1)} \\ 
+  &= \sqrt{\frac{1 - \epsilon_t}{\epsilon_t}}\left(\sum^N_{n = 1}\llbracket y_n\neq g_t(\vb{x}_n)\rrbracket u_n^{(t + 1)}\right) + \sqrt{\frac{\epsilon_t}{1 - \epsilon_t}}\left(\sum^N_{n = 1}\llbracket y_n = g_t(\vb{x}_n)\rrbracket u_n^{(t + 1)}\right) \\ 
+  &= \sqrt{\frac{1 - \epsilon_t}{\epsilon_t}}\left(\sum^N_{n = 1}\llbracket y_n\neq g_t(\vb{x}_n)\rrbracket u_n^{(t + 1)}\right) + \sqrt{\frac{\epsilon_t}{1 - \epsilon_t}}\left(\sum^N_{n = 1}(1 - \llbracket y_n \neq g_t(\vb{x}_n)\rrbracket) u_n^{(t + 1)}\right) 
+\end{align}
+Now consider the definition of $\epsilon_t$ 
+\begin{align*}
+  \epsilon_t &= \frac{\sum^N_{n = 1}\llbracket y_n\neq g_t(\vb{x}_n)\rrbracket u_n^{(t)}}{\sum^N_{n = 1}u_n^{(t)}} \\ 
+  \implies & \sum^N_{n = 1}\llbracket y_n\neq g_t(\vb{x}_n)\rrbracket u_n^{(t)} = \epsilon_t\sum^N_{n = 1}u_n^{(t)}
+\end{align*}
+And 
+\begin{align*}
+  1 - \epsilon_t &= 1 - \frac{\sum^N_{n = 1}\llbracket y_n\neq g_t(\vb{x}_n)\rrbracket u_n^{(t)}}{\sum^N_{n = 1}u_n^{(t)}} \\ 
+  &= \frac{\sum^N_{n = 1}(1 - \llbracket y_n \neq g_t(\vb{x}_n)\rrbracket) u_n^{(t + 1)}}{\sum^N_{n = 1}u_n^{(t)}} \\
+  \implies & \sum^N_{n = 1}(1 - \llbracket y_n \neq g_t(\vb{x}_n)\rrbracket) u_n^{(t + 1)} = (1 - \epsilon_t)\sum^N_{n = 1}u_n^{(t)}
+\end{align*}
+Substituting into $(3)$ we obtain
+\begin{align*}
+  U_{t + 1} &= \sqrt{\frac{1 - \epsilon_t}{\epsilon_t}}\epsilon_t\sum^N_{n = 1}u_n^{(t)} + \sqrt{\frac{\epsilon_t}{1 - \epsilon_t}}(1 - \epsilon_t)\sum^N_{n = 1}u_n^{(t)} \\ 
+  &= \left(2\sqrt{\epsilon_t(1 - \epsilon_t)}\right)\sum^N_{n = 1}u_n^{(t)} \\ 
+  &= 2\sqrt{\epsilon_t(1 - \epsilon_t)}U_t
+\end{align*}
+Therefore 
+\[
+  \frac{U_{t + 1}}{U_t} = 2\sqrt{\epsilon_t(1 - \epsilon_t)}
+\]
+Q.E.D.
+\newpage
+\section*{7}
+% Starting from $s_1, s_2,\dots,s_N = 0$, at $t = 1$, the probem is
+% \[
+%   \min_\eta\min_h\frac{1}{N}\sum^N_{n = 1}\text{err}(\eta h(\vb{x}_n), y_n)
+% \]
+% First we find the best $h$ with linear regression. \\ 
+% In this case, the error function is the square error
+% \[
+%   \text{err}(h(\vb{x}_n), y_n) = (h(\vb{x}_n) - y_n)^2
+% \]
+% The hypothesis that minimizes $\sum^N_{n = 1}(h(\vb{x}_n), y_n)$
+The first part of the gradient boost decision tree is to find the hypothesis
+\[
+  \arg\min_h\frac{\eta}{N}\sum^N_{n = 1}\left(h(\vb{x}_n) - (y_n - s_n)\right)^2
+\]
+Neglecting the constant terms, and utilizing the fact that $s_1 = s_2 =\dots=s_N = 0$ at the beginning of the first iteration, the problem becomes 
+\[
+  \arg\min_h\sum^N_{n = 1}\left(h(\vb{x}_n) - y_n\right)^2
+\]
+Generally, the optimal hypothesis $h$ that minimizes the error function above can be found with any regression algorithm, in this problem, our algorithm of choice is linear regression.\\ 
+Hence, we have
+\[
+  h(\vb{x}_n) = \vb{w}^T\vb{x}^\prime
+\]
+Where
+\begin{align*}
+  \vb{w} &= [w_0\ w_1\ \dots\ w_N]^T \\ 
+  \vb{x}^\prime &= [1\ \vb{w}]^T
+\end{align*}
+Therefore, the minimization problem becomes
+\[
+  \min_{\vb{w}}\sum^N_{n = 1}(\vb{w}^T\vb{x}_n^\prime - y_n)^2
+\]
+Let $g_1(\vb{x})$ be the optimal hypothesis obtained by linear regression, at optimal, we have
+\begin{align*}
+  & \pdv{}{w_i}\left(\sum^N_{n = 1}(\vb{w}^T\vb{x}_n^\prime - y_n)^2\right) = 0\quad i = 0, 1,\dots,d \\ 
+  \implies & \sum^N_{n = 1}(g_1(\vb{x}_n) - y_n){x_n}_i = 0\quad i = 0, 1,\dots,d\ \ (\text{define ${x_n}_0 = 1$})
+\end{align*}
+\par 
+Next, we procede on the next step of the gradient boost decision tree, finding $\alpha_1$
+\begin{align*}
+  \alpha_1 &= \arg\min_\eta\frac{1}{N}\sum^N_{n = 1}((y_n - s_n) - \eta g_1(\vb{x}_n))^2 \\ 
+  &= \arg\min_\eta\sum^N_{n = 1}(y_n - \eta g_1(\vb{x}_n))^2 \\ 
+\end{align*}
+At optimal we have 
+\[
+  \pdv{}{\eta}\sum^N_{n = 1}(y_n - \eta g_1(\vb{x}_n))^2 = \sum^N_{n = 1}-g_x(\vb{x}_n)(y_n - \eta g_1(\vb{x}_n)) =  0 
+\]
+Hence
+\begin{align*}
+  &\sum^N_{n = 1}g_1(\vb{x}_n)(y_n - \alpha_1g_1(\vb{x}_n)) = 0 \\ 
+  \implies & \alpha_1\sum^N_{n = 1}g_1(\vb{x}_n)^2 - \sum^N_{n = 1}g_1(\vb{x}_n)y_n = 0 \\ 
+  \implies & \alpha_1 = \frac{\sum^N_{n = 1}g_1(\vb{x}_n)^2}{\sum^N_{n = 1}g_1(\vb{x}_n)y_n}
+\end{align*}
+\par
+Recall the result obtained earlier 
+\begin{align*}
+  \begin{cases}
+    \sum^N_{n = 1}(g_1(\vb{x}_n) - y_n){x_n}_0 = 0 \\
+    \sum^N_{n = 1}(g_1(\vb{x}_n) - y_n){x_n}_1 = 0 \\
+    \vdots \\
+    \sum^N_{n = 1}(g_1(\vb{x}_n) - y_n){x_n}_d = 0 \\
+  \end{cases}
+\end{align*}
+Which leads to 
+\begin{align*}
+  \begin{cases}
+    \sum^N_{n = 1}g_1(\vb{x}_n){x_n}_0 = \sum^N_{n = 1}y_n{x_n}_0 \\
+    \sum^N_{n = 1}g_1(\vb{x}_n){x_n}_1 = \sum^N_{n = 1}y_n{x_n}_1 \\
+    \vdots \\
+    \sum^N_{n = 1}g_1(\vb{x}_n){x_n}_d = \sum^N_{n = 1}y_n{x_n}_d \\
+  \end{cases}
+\end{align*}
+\newpage
+By multiplying both sides of the $i$-th equation with $w_i$, where $\vb{w}$ is the weight vector of $g_1$, and summing all the resulting equations, we can get
+\begin{align*}
+  &\sum^d_{i = 0}\left(w_i\sum^N_{n = 1}g_1(\vb{x}_n){x_n}_i\right) = \sum^d_{i = 0}\left(w_i\sum^N_{n = 1}y_n{x_n}_i\right) \\ 
+  \implies &\sum^N_{n = 1}\left(g_1(\vb{x}_n)\sum^d_{i = 0}w_i{x_n}_i\right) = \sum^N_{n = 1}\left(y_n\sum^d_{i = 0}w_i{x_n}_i\right) \\ 
+  \implies &\sum^N_{n = 1}g_1(\vb{x}_n)\cdot g_1(\vb{x}_n) = \sum^N_{n = 1}y_ng_1(\vb{x}_n) \\ 
+  \implies &\sum^N_{n = 1}g_1(\vb{x}_n)^2 = \sum^N_{n = 1}y_ng_1(\vb{x}_n) \\ 
+\end{align*}
+Lastly, it was previously derived that
+\[
+  \alpha_1 = \frac{\sum^N_{n = 1}g_1(\vb{x}_n)^2}{\sum^N_{n = 1}g_1(\vb{x}_n)y_n}
+\]
+Since 
+\[
+  \sum^N_{n = 1}g_1(\vb{x}_n)^2 = \sum^N_{n = 1}y_ng_1(\vb{x}_n)  
+\]
+we have proven 
+\[
+  \alpha_1 = 1
+\]
+Q.E.D.
+\newpage
+\section*{8}
+To make the derivation more comprehensive, we use $s_{n, t}$ and $s_{n, t + 1}$ to denote $s_n$ before and after being updated in iteration $t$, repectively. \\ 
+In iteration $t$, after obtaining the hypothesis $g_t = h$ using some regression algorithm on $\{\vb{x}_n, y_n - s_{n, t}\}$, $\alpha_t$ is found by 
+\begin{align*}
+  \alpha_t &= \arg\min_\eta\frac{1}{N}\sum^N_{n = 1}((y_n - s_{n, t}) - \eta g_t(\vb{x}_n))^2 \\ 
+  &= \arg\min_\eta\sum^N_{n = 1}((y_n - s_{n, t}) - \eta g_t(\vb{x}_n))^2 \\ 
+\end{align*}
+The optimal $\eta$ can be found by solving 
+\[
+  \pdv{}{\eta}\left(\sum^N_{n = 1}((y_n - s_{n, t}) - \eta g_t(\vb{x}_n))^2\right) = -2\sum_{n = 1}^Ng_t(\vb{x}_n)(y_n - s_{n, t} - \eta g_t(\vb{x}_n)) = 0
+\]
+Hence we have
+\begin{equation}
+  \sum_{n = 1}^Ng_t(\vb{x}_n)(y_n - s_{n, t} - \alpha_t g_t(\vb{x}_n)) = 0
+\end{equation}
+\par 
+After $\alpha_t$ and $g_t$ is found, $s_{n, t}$ are updated into
+\[
+  s_{n, t}\rightarrow s_{n, t + 1} = s_{n, t} + \alpha_tg_t(\vb{x}_n)
+\]
+Therefore, after the update, we have
+\begin{align*}
+  \sum^N_{n = 1}(y_n - s_{n, t + 1})g_t(\vb{x}_n) &= \sum^N_{n = 1}(y_n - (s_{n, t} + \alpha_tg_t(\vb{x}_n)))g_t(\vb{x}_n) \\ 
+  &= \sum^N_{n = 1}(y_n - s_{n, t} - \alpha_tg_t(\vb{x}_n))g_t(\vb{x}_n) \\ 
+  &= 0\quad(\text{by (4)})
+\end{align*}
+Hence we have proven that $\sum^N_{n = 1}(y_n - s_n)g_t(\vb{x}_n) = 0$ after updating all $s_n$ in iteration t using the steepest $\eta$ as $\alpha_t$. \\
+Q.E.D.
+\newpage
+\section*{9}
+The neural network with one hidden layer and $\tanh$ as the transformation function at each layer has the output of the form
+\begin{align*}
+  h(\vb{x}) &= \tanh(s_1^{(2)}) \\
+  s_1^{(2)} &= \sum_{k = 1}^{d^{(1)}}w_{k, 1}^{(2)}x_k^{(1)}
+\end{align*}
+and 
+\begin{align*}
+  x_i^{(1)} &= \tanh(s_i^{(1)}) \\ 
+  s_i^{(1)} &= \sum_{k = 1}^{d^{(0)}}w_{k, i}^{(1)}x_k^{(0)}
+\end{align*}
+With the error function
+\[
+  e_n = (y_n - h(\vb{x}_n))^2
+\]
+\par 
+We then try to prove the following statement by induction
+\begin{align}
+  w_{i, j}^{(1)} &= w_{i, j + 1}^{(1)}\quad\text{for all $i$ and $1\leq j < d^{(1)}$} \\ 
+  w_{i, 1}^{(2)} &= w_{i + 1, 1}^{(2)}\quad\text{for all $1\leq i < d^{(0)}$}
+\end{align}
+Suppose that after iteration $t$ the statement holds, then in iteration $t + 1$, we have
+\begin{align*}
+  \pdv{e_n}{w_{i, 1}^{(2)}} &= (\pdv{e_n}{s_1^{(2)}})(\pdv{s_1^{(2)}}{w_{i, 1}^{(2)}}) \\ 
+  &= -2(y_n - \tanh(s_1^{(2)}))\tanh^\prime(s_1^{(2)})x_i^{(1)}
+\end{align*}
+and
+\begin{align*}
+  \pdv{e_n}{w_{i, j}^{(1)}} &= (\pdv{e_n}{s_j^{(1)}})(\pdv{s_j^{(1)}}{w_{i, j}^{(1)}}) \\ 
+  &= (\pdv{e_n}{s_1^{(2)}})(\pdv{s_1^{(2)}}{s_j^{(1)}})x_i^{(0)} \\
+  &= \left(-2(y_n - \tanh(s_1^{(2)}))\tanh^\prime(s_1^{(2)})\right)\left(w_{j, 1}^{(2)}\tanh^\prime(s_j^{(1)})\right)x_i^{(0)}
+\end{align*}
+\newpage
+First we analyze $\pdv{e_n}{w_{i, 1}^{(2)}}$, we can see that the only term dependent of $i$ in its expression is $x_i^{(1)}$. \\ 
+We also have
+\begin{align*}
+  x_i^{(1)} &= \tanh(s_i^{(1)}) \\ 
+  &= \tanh(\sum_{k = 1}^{d^{(1)}}w_{k, i}^{(1)}x_k^{(0)}) \\
+\end{align*}
+With condition $(5)$, we know that $w_{k, i}^{(1)}$ is the same for all $1\leq i < d^{(1)}$, so $s_i^{(1)} = \sum_{k = 1}^{d^{(1)}}w_{k, i}^{(1)}x_k^{(0)}$ is independt of $i$. \\ 
+Therefore, $x_i^{(1)}$ is also independent of $i$ and $\pdv{e_n}{w_{i, 1}^{(2)}}$ is independent of $i$. \\ 
+In the $t + 1$-th iteration of the mini-batch gradient descent, $w_{i, 1}^{(2)}$ is updated proportional to the average of $\pdv{e_n}{w_{i, 1}^{(2)}}$ over some set of different $n$. Since we know that for any particular $n$, $\pdv{e_n}{w_{i, 1}^{(2)}}$ is the same for all $i$, after the update $w_{i, 1}^{(2)}$ is still the same for all $i$. \\ 
+Hence condition $(6)$ still holds after the $t + 1$-th iteration. \\ 
+\par 
+Next, we analyze $\pdv{e_n}{w_{i, j}^{(1)}}$, the only term dependent of $j$ in its expression is $w_{j, 1}^{(2)}\tanh^\prime(s_j^{(1)})$ \\ 
+By condition $(6)$, we know that $w_{j, 1}^{(2)}$ is the same for all $1\leq j\leq d^{(1)}$ \\ 
+Also, in the previous part we have proven that $s_i^{(1)}$ is the same for all $1\leq i\leq d^{(1)}$ \\ 
+Therefore, we can conclude that $\pdv{e_n}{w_{i, j}^{(1)}}$ is independent of $j$. \\ 
+Similarly, in the $t + 1$-th iteration $w_{i, j}^{(1)}$ is updated proportional to the average of $\pdv{e_n}{w_{i, j}^{(1)}}$ over some different $n$. Since $\pdv{e_n}{w_{i, j}^{(1)}}$ is independent of $j$, $w_{i, j}^{(1)} = w_{i, j + 1}^{(1)}$ for all $i$ and $1\leq i < d^{(1)}$, and condition $(5)$ still holds after the $t+1$-th iteration. \\ 
+\par
+Lastly, at the beginning of the first iteration, all $w_{i, j}^{l}$ is set to the same value, 0.5, so the two conditions are satisfied. \\ 
+Therefore by induction we've proven that $w_{i, j}^{(1)} = w_{i, j + 1}^{(1)}$ for all $i$ and $1\leq j < d^{(1)}$ ($(5)$) \\ 
+Q.E.D.
+\newpage
+\section*{10}
+Plot: \\
+\includegraphics[width = \textwidth]{p10.png} \\ 
+Findings: \\ 
+From the plot, we can see that the trend in $E_\text{in}(g_t)$ and in $\epsilon_t$ is similar. They both increase rapidly at the beginning of the iterations, stabilize at around $t = 10$, and remain at around the same level for the rest of the process. \\ 
+We can see that the fluctuation in $E_\in(g_t)$ is a lot larger than that in $\epsilon_t$. A possible explanation to this phenomena is that since in every iteration, the best hypothesis is the one that results in the smallest $\epsilon_t$, so the resulting minimal $\epsilon_t$ would be similar in value among iterations, as the minimizing ability of the decision given some example weight $\vb{u}$ should not differ much. On the other hand, the selection of the hypothesis is not as directly related to $E_\text{in}$, so although $E_\text{in}$ has a similar trend, it is more prone to randomness, and its variation is a lot larger. \\ 
+Also, in the lecture, we are taught that in every iteration, the weight for each example is multiplied or divided by $\sqrt{\frac{\epsilon_t}{1 - \epsilon_t}}$, we can see that as $\epsilon_t$ gets closer to $\frac{1}{2}$, this value gets close to $1$, which means that in each update the weights are not changed significantly. In other words, as $\epsilon_t$ approaches $\frac{1}{2}$, the algorithm converges to some point where more iterations no longer affect the output of the AdaBoost algorithm. \\ 
+This analysis is consistent to what is shown in the graph, as we can see that after some iterations, $\epsilon_t$ gets closer to $\frac{1}{2}$, and the rate at which $\epsilon_t$ grow become much smaller. Also, the trend of $E_\text{in}$ also becomes more stable, despite still having large deviations.
+\newpage
+Code Snapshot: \\ 
+% \includegraphics[width = \textwidth]{code.png}\\
+\newpage
+\section*{11}
+Plot: \\
+\includegraphics[width = \textwidth]{p11.png} \\ 
+Findings: \\ 
+First, we can see that $E_\text{in}(G_t)$ decreases steadily throughout the 500 iterations. \\ 
+Starting at about $0.38$ at $t = 0$, $E_\text{in}(G_t)$ drops to less than $0.05$ at the end of the 500-th iteration. \\ 
+The significant decrease of $E_\text{in}(G_t)$ shows that although decision stump is a rather simple and weak model, adaptive boosting does indeed allow it to implement more complex boundaries to fit the training data set by aggregation. \\ 
+Also, we can see that the rate at which $E_\text{in}(G_t)$ decreases is greater at small $t$ than at large $t$. This is probably because as the number of iteration increases, the model approaches a limit beyond which aggregation cannot make the fitting performance better.\\
+\par
+Second, we see that despite the significant decrease in $E_\text{in}(G_t)$, the decrease in $E_\text{out}(G_t)$ is really insignificant.\\ 
+In most of the 500 steps, $E_\text{out}(G_t)$ fluctuates between $0.35$ and $0.40$. Although at about $t = 150$ $E_\text{out}(G_t)$ drops to a minima of approximately $0.34$, $E_\text{out}(G_t)$ soon increases back to above $0.375$ and remains in the range of $0.37$ and $0.40$ for the rest of the iterations. \\ 
+The insignificance, if not inexistance, of $E_\text{out}(G_t)$ shows that although AdaBoost combined with decision stump allows the model to implement complex boundaries and fit the training set, the improve in the performance on the testing set is greatly limited. \\ 
+This phenomena might suggest that AdaBoost with decision stump might not be a great model regarding this data set. \\ 
+Another thing worth noting is that at small $t$, the fluctuation of $E_\text{out}(G_t)$ is greater than that at large $t$. This might be because although not resulting in a better performance of classifying the testing data set, a larger number of iteration still leads to more stable performance of the model.
+\newpage
+\section*{12}
+Plot: \\
+\includegraphics[width = \textwidth]{p12.png} \\
+Findings: \\
+Form the plot we can see that both $U_t$ and $E_\text{in}$ decreases steadily throughout the iterations. The reason for the decrease in $E_\text{in}$ is described in P11. \\ 
+For $U_t$, we have proven in problem 6 that $\frac{U_{t + 1}}{U_t} = 2\epsilon_t\sqrt{\epsilon_t(1 - \epsilon_t)}$, then, by AM-GM inequality, we have
+\begin{align*}
+  &\sqrt{\epsilon_t(1 - \epsilon_t)}\leq \frac{\epsilon_t + (1 - \epsilon_t)}{2} \\ 
+  \implies &2\sqrt{\epsilon_t(1 - \epsilon_t)}\leq1
+\end{align*}
+Hence, $U_t$ must decrease monotonically, which fits our observation from the plot. \\ 
+Also, from the plot we can see that as $t$ increases, both $U_t$ and $E_\text{in}$ decreases more slowly, and approaches some constant value asymptotically. This shows that the AdaBoost algorithm is indeed converging, and that after many number of iterations, the algorithm approaches a point where the parameters $\vb{u}$ stabilize, and $E_\text{in}$ can be improved no more.
+\end{document}
+
+

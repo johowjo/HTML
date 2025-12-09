@@ -1,0 +1,5 @@
+sum of u 1
+optimal error 0.165
+optimal theta 476
+optimal s 1
+optimal dimension 90

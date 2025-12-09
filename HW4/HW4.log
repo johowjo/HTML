@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.7.15)  5 NOV 2024 00:44
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.7.15)  24 JUN 2025 05:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/Users/howardliao/Desktop/2024_Fall/HTML/HW4/HW4.tex
-(/Users/howardliao/Desktop/2024_Fall/HTML/HW4/HW4.tex
+**HW4.tex
+(./HW4.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
 (/usr/local/texlive/2024/texmf-dist/tex/latex/base/article.cls
@@ -1525,78 +1525,30 @@ Overfull \hbox (20.17592pt too wide) detected at line 76
 ] [2] [3] [4] [5]
 File: P10_fig2.png Graphic file (type bmp)
 <P10_fig2.png>
-File: P10snap.png Graphic file (type bmp)
-<P10snap.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 201--212
-
- []
-
-[6] [7]
-File: P11_fig_2.png Graphic file (type bmp)
-<P11_fig_2.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 214--217
-
- []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 218--221
+LaTeX Warning: File `P10snap.png' not found on input line 211.
 
- []
+! Unable to load picture or PDF file 'P10snap.png'.
+<to be read again> 
+                   }
+l.211 ...graphics[width = \textwidth]{P10snap.png}
+                                                   \\
+? 
+! Emergency stop.
+<to be read again> 
+                   }
+l.211 ...graphics[width = \textwidth]{P10snap.png}
+                                                   \\
+End of file on the terminal!
 
-[8]
-File: P11snap.png Graphic file (type bmp)
-<P11snap.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 222--224
-
- []
-
-[9]
-File: P12.png Graphic file (type bmp)
-<P12.png>
-
-Underfull \hbox (badness 10000) in paragraph at lines 226--229
-
- []
-
-
-Overfull \hbox (7.09306pt too wide) in paragraph at lines 230--234
-[]\TU/lmr/m/n/10.95 This figure is the histogram of $[][][][][][] [] [][][][][]
-[]$, the horizontal axis is the value of $[][][][][][] []
- []
-
-[10]
-File: P12snap.png Graphic file (type bmp)
-<P12snap.png>
- [11]
-Underfull \hbox (badness 10000) in paragraph at lines 250--252
-
- []
-
-[12] 
-enddocument/afterlastpage: lastpage setting LastPage.
-(./HW4.aux)
- ***********
-LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2022/08/05>
- ***********
-
-
-LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 0.475pt have occurred.
-
-Package rerunfilecheck Info: File `HW4.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
- ) 
+ 
 Here is how much of TeX's memory you used:
- 38055 strings out of 474773
- 796500 string characters out of 5757724
+ 38051 strings out of 474773
+ 796521 string characters out of 5757724
  1949839 words of memory out of 5000000
- 59599 multiletter control sequences out of 15000+600000
+ 59602 multiletter control sequences out of 15000+600000
  566818 words of font info for 91 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 84i,18n,114p,1099b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Output written on HW4.pdf (12 pages).
+ 84i,18n,114p,1054b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
+Output written on HW4.pdf (5 pages).

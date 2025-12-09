@@ -1,0 +1,325 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{tikz}
+\usepackage{xeCJK}
+\usepackage{physics}
+\usepackage{multirow,booktabs}
+% \usepackage[table]{xcolor}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{unicode-math}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage{calc}
+\usepackage{multicol}
+\usepackage{cancel}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+\let\mathbb\relax
+\DeclareMathAlphabet{\mathbb}{U}{msb}{m}{n}
+\newlength{\tabcont}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+\usepackage{empheq}
+\usepackage{framed}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\linespread{1.2}
+\graphicspath{{./}}
+\setCJKmainfont[AutoFakeBold = 3, AutoFakeSlant = 4]{BiauKaiTC}
+\colorlet{shadecolor}{orange!15}
+\parindent 0in
+\parskip 12pt
+\geometry{margin=1in, headsep=0.25in}
+\graphicspath{{./}}
+\theoremstyle{definition}
+\newtheorem{thr}{Theorem}
+\newtheorem{lma}{Lemma}
+\newtheorem{defn}{Definition}
+\newtheorem{reg}{Rule}
+\newtheorem{exer}{Exercise}
+\newtheorem{note}{Note}
+\newtheorem{asmp}{Assumption}
+\begin{document}
+\setcounter{section}{0}
+\title{Title}
+
+\thispagestyle{empty}
+\begin{center}
+  {\large \bf HTML HW5} \\ 
+  B12901022 廖冠豪
+\end{center}
+\section*{5}
+Given the definition of $\tilde{\vb{x}}_k$ and $\tilde{y}_k$, observe that
+\[
+  \vb{w}^T\tilde{\vb{x}}_k - \tilde{y}_k = w_{k - 1}\sqrt{\lambda\alpha_{k - 1}} - 0 = w_{k - 1}\sqrt{\lambda\alpha_{k - 1}}
+\]
+for $k = 1,2, \dots, d + 1$ \\ 
+\par
+Hence
+\[
+  (P_V)\min_{\vb{w}\in\mathbb{R}^{d + 1}}\frac{1}{N + K}\left(\sum^N_{n = 1}(\vb{w}^T\vb{x} - y_n)^2 + \sum^{d + 1}_{k = 1}\lambda\alpha_{k - 1}w^2_{k - 1}\right)
+\]
+also, $N + K$ is constant with respect to different $\vb{w}\in\mathbb{R}^{d + 1}$, so
+\begin{align*}
+  \vb{w}^\star &= \arg\min_{\vb{w}\in\mathbb{R}^{d + 1}}\left(\sum^N_{n = 1}(\vb{w}^T\vb{x} - y_n)^2 + \lambda\sum^{d + 1}_{k = 1}\alpha_{k - 1}w^2_{k - 1}\right) \\ 
+  &= \arg\min_{\vb{w}\in\mathbb{R}^{d + 1}}\left(\sum^N_{n = 1}(\vb{w}^T\vb{x} - y_n)^2 + \lambda\sum^{d}_{i = 0}\alpha_{i}w^2_{i}\right) \\ 
+\end{align*}
+\par 
+The solution to $(P_R)$ is 
+\begin{align*}
+  &\arg\min_{\vb{w}\in\mathbb{R}^{d + 1}}\left(\frac{1}{N}\sum^N_{n = 1}(\vb{w}^T\vb{x} - y_n)^2 + \frac{\lambda}{N}\sum^{d}_{i = 0}\alpha_{i}w^2_{i}\right) \\ 
+  = &\arg\min_{\vb{w}\in\mathbb{R}^{d + 1}}\left(\sum^N_{n = 1}(\vb{w}^T\vb{x} - y_n)^2 + \lambda\sum^{d}_{i = 0}\alpha_{i}w^2_{i}\right)\quad(\text{$N$ is constant})
+\end{align*}
+Therefore we see that the optimal $\vb{w}^\star$ for $(P_V)$ is also the optimal solution for $(P_R)$. \\ 
+Q.E.D.
+\newpage 
+\section*{6}
+First, we have
+\begin{align*}
+  \nabla\tilde{E}_\text{aug}(\vb{w}) &= \nabla\tilde{E}_\text{in} + \nabla(\frac{\lambda}{N}\norm{\vb{w}}^2) \\ 
+  &= \frac{1}{2}\nabla\left((\vb{w} - \vb{w}^\star)^T\text{H}(\vb{w} - \vb{w}^\star)\right) + \frac{\lambda}{N}\nabla\norm{\vb{w}}^2
+\end{align*}
+Then,
+\[
+  \nabla\left((\vb{w} - \vb{w}^\star)^T\text{H}(\vb{w} - \vb{w}^\star)\right) = \left((\vb{w} - \vb{w}^\star)^T\text{H}\right)^T + \text{H}(\vb{w} - \vb{w}^\star)
+\]
+Since the Hessian is symmetric, the expression above becomes
+\[
+   2\text{H}(\vb{w} - \vb{w}^\star)
+\]
+And,
+\begin{align*}
+  \nabla\norm{\vb{w}}^2 &= 2\vb{w}
+\end{align*}
+Let the minimizer of $\tilde{E}_\text{aug}$ be $\vb{u}$, then
+\begin{align*}
+  \nabla\tilde{E}_\text{aug}(\vb{u}) &= \text{H}(\vb{u} - \vb{w}^\star) + \frac{2\lambda}{N}\vb{u} \\ 
+  \implies (\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1})\vb{u} &= \text{H}\vb{w}^\star
+\end{align*}
+($\text{I}_{d + 1}$ is the $d + 1$-dimension identity matrix) \\
+\par
+Next, we prove that $\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1}$ is invertible. \\ 
+Let $\text{A} = \text{H} + \frac{2\lambda}{N}\text{I}_{d + 1}$, consider $\vb{v}^T\text{A}\vb{v}$ for any non-zero vector $\vb{v} \in \mathbb{R}^{d + 1}$
+\begin{align*}
+  \vb{v}^T\text{A}\vb{v} &= \vb{v}^T\text{H}\vb{v} + \frac{2\lambda}{N}\vb{v}^T\text{I}_{d + 1}\vb{v} \\ 
+  &= \vb{v}^T\text{H}\vb{v} + \frac{2\lambda}{N}\norm{\vb{v}}^2
+\end{align*}
+Since the Hessian is positive semi-definite, $\vb{v}^T\text{H}\vb{v} \geq 0$, so 
+\begin{align*}
+  \vb{v}^T\text{A}\vb{v} \geq \frac{2\lambda}{N}\norm{\vb{v}}^2 > 0
+\end{align*}
+Hence $\text{A}$ is positive definite, and therefore is invertible.\\
+\par 
+Given that $\text{A} = \text{H} + \frac{2\lambda}{N}\text{I}_{d + 1}$ is invertible, we can express $\vb{u}$ as
+\begin{align*}
+  \vb{u} &= (\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1})^{-1}\text{H}\vb{w}^\star \\ 
+  &= (\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1})^{-1}\left((\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1}) - \frac{2\lambda}{N}\text{I}_{d + 1}\right)\vb{w}^\star \\
+  &= \left(\text{I}_{d + 1} - \frac{2\lambda}{N}(\text{H} + \frac{2\lambda}{N}\text{I}_{d + 1})^{-1}\right) \vb{w}^\star \\
+  &= \left(\text{I}_{d + 1} - (\frac{N}{2\lambda}\text{H} + \text{I}_{d + 1})^{-1}\right)\vb{w}^\star
+\end{align*}
+\newpage 
+\section*{7}
+\begin{align*}
+  &\mathbb{E}\left(\frac{1}{K}\sum^N_{n = N - K + 1}(y_n - \bar{y})^2\right) \\ 
+  =&\frac{1}{K}\sum^N_{n = N - K + 1}\mathbb{E}\left(y_n^2 - 2y_n\bar{y} + \bar{y}^2\right) \\  
+  =&\frac{1}{K}\sum^N_{n = N - K + 1}\left(\mathbb{E}(y_n^2) - 2\mathbb{E}(y_n\bar{y}) + \mathbb{E}(\bar{y}^2)\right)
+\end{align*}
+Since $y_1, y_2,\dots,y_n$ is generated i.i.d. from a distribution with zero mean and $\sigma^2$ variance, we know
+\[
+  \mathbb{E}(y_iy_j) =
+  \begin{cases}
+    0 & i \neq j \\
+    \sigma^2 & i = j
+  \end{cases}
+\]
+Now we can calculate the three terms separately \\ 
+First,
+\begin{align*}
+  \mathbb{E}(y^2_n) = \sigma^2
+\end{align*}
+Second,
+\begin{align*}
+  \mathbb{E}(y_n\bar{y}) = \mathbb{E}\left(y_n\frac{1}{N - K}\sum^{N - K}_{i = 1}y_i\right) = \frac{1}{N - K}\mathbb{E}\left(y_n\sum^{N - K}_{i = 1}y_i\right)
+\end{align*}
+Since $n = N - K + 1, N - K + 2,\dots, N$ and $i = 1, 2,\dots, N - K$, we always have $n \neq i$, so 
+\[
+  \mathbb{E}(y_n\bar{y}) = 0
+\]
+Third,
+\begin{align*}
+  \mathbb{E}(\bar{y}^2) &= \mathbb{E}\left((\frac{1}{N - K}\sum_{i = 1}^{N - K}y_i)^2\right) \\ 
+  &= \frac{1}{(N - K)^2}\mathbb{E}\left((\sum_{i = 1}^{N - K}y_i)^2\right) \\ 
+  &= \frac{1}{(N - K)^2}\mathbb{E}\left(\sum_{i = 1}^{N - K}y_i^2 + \sum_{i = 2}^{N - K}\sum_{j = 1}^{i - 1}y_iy_j\right) \\ 
+  &= \frac{1}{(N - K)^2}(N - K)\sigma^2 \\ 
+  &= \frac{\sigma^2}{N - K}
+\end{align*}
+Therefore,
+\begin{align*}
+  \mathbb{E}\left(\frac{1}{K}\sum^N_{n = N - K + 1}(y_n - \bar{y})^2\right) &= \frac{1}{K}\sum^N_{n = N - K + 1}(\sigma^2 - 2\cdot0 + \frac{\sigma^2}{N - K}) \\ 
+  &= \frac{1}{K}K(1 + \frac{1}{N - K})\sigma^2 \\ 
+  &= \frac{N - K + 1}{N - K}\sigma^2
+\end{align*}
+\newpage
+\section*{8}
+\begin{align*}
+  E_\text{loocv}(\mathcal{A}_{avg}) &= \frac{1}{N}\sum^{N}_{i = 1}\left(\frac{1}{N - 1}\left(\sum_{j = 1}^{i - 1}y_j + \sum_{j = i + 1}^{N}y_j\right) - y_i\right)^2 \\ 
+  &= \frac{1}{N}\sum^{N}_{i = 1}\left(\frac{1}{N - 1}(Nw_0^\star - y_i) - y_i\right)^2 \\ 
+  &= \frac{1}{N}\sum^{N}_{i = 1}\left(\frac{1}{N - 1}(Nw_0^\star - Ny_i)\right)^2 \\
+  &= \frac{N}{(N - 1)^2}\sum^N_{i = 1}(w^\star_0 - y_i)^2
+\end{align*}
+Also, 
+\begin{align*}
+  E_\text{in}(w_0^\star) &= \frac{1}{N}\sum^N_{i = 1}(w_0^\star - y_i)^2
+\end{align*}
+By comparing the expressions, we see that
+\[
+  E_\text{loocv}(\mathcal{A}_{avg}) = \left(\frac{N}{N - 1}\right)^2E_\text{in}(w_0^\star)
+\]
+Q.E.D.
+\newpage 
+\section*{9}
+When deployed to a test distribution $P(y = -1) = p$, $E_\text{out}$ is given by
+\[
+  E_\text{out}(g) = p\epsilon_- + (1 - p)\epsilon_+
+\]
+The binary classifier $g$ is as good as the constant classifier $g_c$ when this $E_\text{out}(g)$ equals $E_\text{out}(g_c)$, hence
+\begin{gather*}
+  p\epsilon_- + (1 - p)\epsilon_+ = p \\ 
+  \implies (1 + \epsilon_+ - \epsilon-)p = \epsilon_+ \\ 
+  \implies p = \frac{\epsilon_+}{1 + \epsilon_+ - \epsilon-} \in [0, 1]
+\end{gather*}
+Hence when $p = \frac{\epsilon_+}{1 + \epsilon_+ - \epsilon-}$, $g$ is as good as $g_c$.
+\newpage
+\section*{10}
+Histogram of $E_\text{out}(g)$: \\ 
+\includegraphics[width = \textwidth]{p10_dis.png} \\
+Histogram of the number of non-zero components in each $g$: \\ 
+\includegraphics[width = \textwidth]{p10_non.png} \\ 
+\newpage
+Code snapshot: \\ 
+% \includegraphics[width = \textwidth]{p10_code.png} \\ 
+Language: \texttt{c++} (using \texttt{linhear.h}) \\
+\newpage
+\section*{11}
+Histogram of $E_\text{out}(g)$: \\ 
+\includegraphics[width = \textwidth]{p11_dis.png}\\
+Findings: \\ 
+By comparison between the distribution of $E_\text{out}$ in P11 and P10, we can find that they are really similar. They both are very close to normal distribution centered at around $0.015$, maxima at around $0.018$ and minima at around $0.012$. \\ 
+Although the distribution appears to be similar, there are slight differences. \\ 
+First, throughout the 1126 experiments, I recorded every $\log{\lambda^\star}$ selected, and draw them in histograms. \\ 
+\includegraphics[width = 0.5\textwidth]{p10_lambda.png}\includegraphics[width = 0.5\textwidth]{p11_lambda.png} \\ 
+The histogram on the left is for P10, and the one on the right is for P11. From the histograms we can see that in P10 all of the $\lambda^\star$ are either $0.01$ or $0.1$, while in the major value of P11 $\lambda^\star$ is $1$. This indicates that the validation process favors models that are more strongly regularized. A possible explanation to this phenomena is that while models that are weakly regularized has a higher dimension of freedom when fitting the training set, and hence a better $E_\text{in}$, its performance on the validation set might not be good due to overfitting. On the other hand, by applying a higher regularization factor, overfitting can be combated and a model can perform better on the validation set. \\
+Second, by comparing the two distributions, we see that in P11, the distribution decays faster for values greater than the center ($\approx 0.015$) than in P10. Also, the frequency of the largest $E_\text{out}$ (around $0.018$) is lower in P11 than in P10. This suggests that by choosing the model with validation, instances of high $E_\text{out}$ is prevented to some extent, showing the effect of validation. \\ 
+\par 
+Out of curiosity, I also plot the histogram of the number of non-zero components for $g$ in P11, \\ 
+\includegraphics[width = \textwidth]{p11_fig_3.png}\\ 
+We see that compared with the plot in P10, which only has two peaks for the number of non-zero components, here there are three peaks. Together with the histograms for $\lambda^\star$ in P10 and P11, we can conclude that one value of $\lambda^\star$ corresponds to one peak in the number of non-zero components in $g$. This is consistent with our knowledge about regularization. As the regularization factor $\lambda$ penalizes the norm of the weight vector, its value should also be related to the sparsity of the weight vector, and hence the number of non-zero components in $g$. Furthermore, as a higher peak should correspond to a $\lambda$ value that is chosen more often, so we can conclude that a larger $\lambda^\star$ corresponds to a peak with a lower number of non-zero components for $g$. This also fits theory, as a higher regularization factor should result in models with sparser weight vectors. \\ 
+Code snapshot: \\ 
+% \includegraphics[width = \textwidth]{p11_code.png}
+\newpage
+\section*{12}
+Histogram of $E_\text{out}(g)$: \\ 
+\includegraphics[width = \textwidth]{p12_dis.png}\\
+Findings : \\ 
+The distribution in P12 is also quite similar to that in P11 (as well as P10), exhibiting the traits of a normal distribution centered at approximately $0.015$. \\
+However, we can still see that the value of $E_\text{out}$ is smaller in P12. We see that in the distribution in P12, no samples with $E_\text{out}$ around $0.018$ is presented, also, the minima of $E_\text{out}$ in P12 is also lower than that in P11. This suggests that for this particular data set, 3-fold cross validation might perform better than the validation method adopted in P11, in terms of selecting a good model. \\ 
+\newpage
+I also recorded the $\lambda^\star$ chosen in this problem and draw them on a histogram, as shown below. \\ 
+\includegraphics[width = \textwidth]{p12_lambda.png} \\ 
+By comparing this histogram with the one for P11 (the bottom-right plot on page 10), we see that the distribution of the $\lambda^\star$ chosen is very similiar in P11 and P12. Therefore, despite the differences in the distribution of $E_\text{out}$, we see that the choice of models by the two validation methods doesn't differ much.
+\par
+Code snapshot: \\ 
+% \includegraphics[width = \textwidth]{p12_code.png}
+\newpage
+\section*{13}
+First define the parameter $c_{n, i}$ to simplify calculation
+\begin{align*}
+  c_{n, i} &= y_n - \sum_{j \neq i}w^{(t)}_jx_{n, j}
+\end{align*}
+Then we can rewrite $w^{(t + 1)}_i$ as
+\[
+  w^{(t + 1)}_i\leftarrow\arg\min_{w_i\in\mathbb{R}}\frac{1}{N}\sum_{n = 1}^N\left(c_{n, i} - w_ix_{n, i}\right)^2 + \frac{\lambda_1}{N}\left(\sum_{j\neq i}|w_j^{(t)}| + |w_i|\right) + \frac{\lambda_2}{N}\left(\sum_{j \neq i}(w_j^{(t)})^2 + w_i^2\right)
+\]
+Since $N$, $\sum_{j\neq i}|w_j^{(t)}|$ and $\sum_{j \neq i}(w_j^{(t)})^2$ are constant, $w^{(t + 1)}_i$ has the simpler form
+\begin{align*}
+  w^{(t + 1)}_i&\leftarrow\arg\min_{w_i\in\mathbb{R}}\sum_{n = 1}^N\left(c_{n, i} - w_ix_{n, i}\right)^2 + \lambda_1|w_i| + \lambda_2w_i^2 \\ 
+  \implies w^{(t + 1)}_i&\leftarrow\arg\min_{w_i\in\mathbb{R}}\left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right)w_i^2 + \left(\text{sign}(w_i)\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i})\right)w_i + \sum_{n = 1}^Nc_{n, i}^2 \\ 
+  \implies w^{(t + 1)}_i&\leftarrow\arg\min_{w_i\in\mathbb{R}}\left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right)w_i^2 + \left(\text{sign}(w_i)\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i})\right)w_i\quad(\sum_{n = 1}^Nc_{n, i}^2\text{is constant})
+\end{align*}
+Now we analyze the quadratic function $\left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right)w_i^2 + \left(\text{sign}(w_i)\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i})\right)w_i$ \\ 
+We can rewrite this in the concise form  $aw_i^2 + bw_i$, where
+\begin{align*}
+  a &= \left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right) \\ 
+  b &= 
+  \begin{cases}
+    \lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i}) & w_i \geq 0 \\ 
+    -\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i}) & w_i < 0 \\ 
+  \end{cases}
+\end{align*}
+Since $\lambda_2 \geq 0$ and clearly $\sum_{n = 1}^Nx_{n, i}^2 \geq 0$, we have $a \geq 0$ \\ 
+Given that $\lambda_1 \geq 0$, the sign of b has three different cases. \\ 
+Case 1 : $\frac{\lambda_1}{2} < \sum_{n = 1}^N(c_{n, i}x_{n, i})$ \\ 
+\[
+  \text{sign}(b) = -1
+\]
+Case 2 : $|\sum_{n = 1}^N(c_{n, i}x_{n, i})| \leq \frac{\lambda_1}{2}$\\ 
+\[
+  \text{sign}(b) = 
+  \begin{cases}
+    +1 \lor 0 & w_i \geq 0 \\ 
+    -1 \lor 0 & w_i < 0 \\
+  \end{cases}
+\]
+(For case 2, define sign($0$) = $0$) \\ 
+Case 3 : $\sum_{n = 1}^N(c_{n, i}x_{n, i}) < -\frac{\lambda_1}{2}$\\ 
+\[
+  \text{sign}(b) =  + 1
+\]
+
+In case 2, since $a \geq 0$, $bw_i \geq 0$, we see that $aw_i^2 + bw_i \geq 0$, hence the minima of $aw_i^2 + bw_i$ is $0$, and $w_i = 0$ is a minimizer.  \\ 
+In case 1, since $b < 0$, there is a minima at $w_i > 0$, this is the minima of the quadratic function 
+\[
+  \left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right)w_i^2 \left(\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i})\right)w_i
+\]
+Hence the minimizer is 
+\[
+  w_i^{(t + 1)} = \frac{\frac{-\lambda_1}{2} + \sum_{n = 1}^N(c_{n, i}x_{n, i})}{\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2}
+\]
+Similarly, in case 3, since $b > 0$, there is a minima at $w_i < 0$, this is the minima of the quadratic function 
+\[
+  \left(\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2\right)w_i^2 \left(-\lambda_1 - 2\sum_{n = 1}^N(c_{n, i}x_{n, i})\right)w_i
+\]
+Hence the minimizer is 
+\[
+  w_i^{(t + 1)} = \frac{\frac{\lambda_1}{2} + \sum_{n = 1}^N(c_{n, i}x_{n, i})}{\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2}
+\]
+\par 
+Hence we can conclude that 
+\begin{align*}
+  w_i{(t + 1)} &= 
+  \begin{cases}
+    0 & |\sum_{n = 1}^N(c_{n, i}x_{n, i})| \leq \frac{\lambda_1}{2} \\[1em]
+    \frac{\frac{-\lambda_1}{2} + \sum_{n = 1}^N(c_{n, i}x_{n, i})}{\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2} & \frac{\lambda_1}{2} < \sum_{n = 1}^N(c_{n, i}x_{n, i}) \\[1em]
+    \frac{\frac{\lambda_1}{2} + \sum_{n = 1}^N(c_{n, i}x_{n, i})}{\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2} & \sum_{n = 1}^N(c_{n, i}x_{n, i}) < -\frac{\lambda_1}{2}\\[1em]
+  \end{cases} \\ 
+  &= \alpha\cdot\max(0, \beta)
+\end{align*}
+Where $\alpha$ and $\beta$ is given by
+\begin{align*}
+  \alpha &= \text{sign}(\sum_{n = 1}^N\left(c_{n, i}x_{n, i}\right)) \\ 
+  \beta &=  \frac{\frac{-\lambda_1}{2} + |\sum_{n = 1}^N(c_{n, i}x_{n, i})|}{\sum_{n = 1}^Nx_{n, i}^2 + \lambda_2}
+\end{align*}
+\newpage
+Note that in the definition of $\alpha$ above, our choice for sign($0$) is not important, as in the case where $\sum_{n = 1}^N\left(c_{n, i}x_{n, i}\right) = 0$, $\beta \leq 0$, and therefore $w_i^{(t + 1)} = 0$ 
+\end{document}
+
+
